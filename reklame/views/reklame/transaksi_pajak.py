@@ -650,9 +650,11 @@ def view_edit(request):
     elif SESS_EDIT_FAILED in request.session:
         return session_failed(request, SESS_EDIT_FAILED)
     values = row.to_dict()
+    print '------------------>', values['ketinggian_ni']
     values['jenis_reklame_nm'] = row.jenis_reklames and row.jenis_reklames.nama or ''
     #values['jenis_reklame_ni'] = row.jenis_reklames.njop.nilai or ''
     values['ketinggian_nm'] = row.ketinggians and row.ketinggians.nama or ''
+    #values['ketinggian_ni'] = row and row.ketinggians.ketinggian_ni or 0.0
     values['jenis_nssr_nm'] = row.jenis_nssr and row.jenis_nssr.nama or ''
     values['jenis_nssr_kd'] = row.jenis_nssr and row.jenis_nssr.kode or ''
     values['kelas_jalan_nm'] = row.kelas_jalans and row.kelas_jalans.nama or ''

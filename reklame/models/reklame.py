@@ -263,6 +263,7 @@ class Transaksi(Base, osExtendModel):
     jml_ketinggian   = Column(Float ,nullable=False, )
     kelas_jalan_ni   = Column(Float ,nullable=False, )
     sudut_pandang_ni   = Column(Float ,nullable=False, )
+    ketinggian_ni   = Column(Float ,nullable=False, )
     lokasi_pasang_ni   = Column(Float ,nullable=False, )
     faktor_lain_ni   = Column(Float ,nullable=False, )
     nssr_ni   = Column(Float ,nullable=False, )

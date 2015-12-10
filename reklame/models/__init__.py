@@ -36,6 +36,8 @@ from pyramid.security import (
     )
 from ..tools import as_timezone
 
+import locale
+
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
@@ -54,8 +56,9 @@ class CommonModel(object):
     def from_dict(self, values):
         for column in self.__table__.columns:
             if column.name in values:
-                if column.type==FLOAT:
-                    setattr(self, column.name, float(values[column.name]))
+                if column.type.python_type==float:
+                    locale.setlocale( locale.LC_ALL, 'en_US.UTF-8' )
+                    setattr(self, column.name, locale.atof(values[column.name]))
                 else:
                     setattr(self, column.name, values[column.name])
 

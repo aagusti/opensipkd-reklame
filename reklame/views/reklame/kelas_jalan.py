@@ -16,7 +16,7 @@ from ...models import(
     DBSession,
     )
 from ...models.reklame import (
-    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Rekening, OPreklame, TransaksiPajak
+    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Rekening, Reklame, Transaksi
     )
 from datatables import ColumnDT, DataTables
 from datetime import datetime
@@ -38,7 +38,7 @@ def view_list(request):
 ##########    
 @view_config(route_name='reklame-jalan-kelas-act', renderer='json',
              permission='reklame-jalan-kelas-act')
-def kelas_jalan_act(request):
+def vie_act(request):
     ses = request.session
     req = request
     params = req.params
@@ -56,7 +56,7 @@ def kelas_jalan_act(request):
         rowTable = DataTables(req, KelasJalan, query, columns)
         return rowTable.output_result()
         
-    elif url_dict['act']=='hon_kls':
+    elif url_dict['act']=='hon':
         term = 'term' in params and params['term'] or '' 
         rows = DBSession.query(KelasJalan.id, 
                                KelasJalan.kode, 
@@ -75,7 +75,7 @@ def kelas_jalan_act(request):
             r.append(d)
         return r   
            
-    elif url_dict['act']=='hok_kls':
+    elif url_dict['act']=='hok':
         term = 'term' in params and params['term'] or '' 
         rows = DBSession.query(KelasJalan.id, 
                                KelasJalan.kode, 
@@ -265,7 +265,7 @@ def view_delete(request):
         
     a = DBSession.query(Jalan).filter(Jalan.kelas_jalan_id==uid).first()
     if a:
-        request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Objek Pajak.', 'error')
+        request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Tabel Jalan.', 'error')
         return route_list(request)
         
     form = Form(colander.Schema(), buttons=('hapus','batal'))

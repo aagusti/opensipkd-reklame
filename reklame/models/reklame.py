@@ -79,11 +79,8 @@ class Pemilik(Base, osExtendModel):
     __table_args__ = {'extend_existing':True, 'schema' : 'reklame',}   
     
     alamat     = Column(String(255))
-    no_telp    = Column(String(20))
-    no_fax     = Column(String(20))
-    no_hp      = Column(String(20))
-    email      = Column(String(100))
-    kd_pos     = Column(String(5))
+    telephone  = Column(String(16))
+    mobile     = Column(String(16))
     disabled   = Column(SmallInteger, nullable=False, default=0)
 
 ## Rekening ##
@@ -108,53 +105,137 @@ class Rekening(Base, osExtendModel):
 class Ketinggian(Base, osExtendModel):
     __tablename__  = 'ketinggians'
     __table_args__ = {'extend_existing':True, 'schema' : 'reklame',} 
+    nilai          = Column(BigInteger)
+    tinggi_min     = Column(Integer, default=0)
+    tinggi_max     = Column(Integer, default=0)
+    disabled       = Column(SmallInteger, nullable=False, default=0)
+    
+## Lokasi Pasang ##
+class Lokasi(Base, osExtendModel):
+    __tablename__  = 'lokasi_pasangs'
+    __table_args__ = {'extend_existing':True, 'schema' : 'reklame',} 
     nilai          = Column(Float)
     disabled       = Column(SmallInteger, nullable=False, default=0)
     
-## NSR ##
-class Nsr(Base, osExtendModel):
-    __tablename__  = 'rek_nsr'
+## Sudut Pandang ##
+class Sudut(Base, osExtendModel):
+    __tablename__  = 'sudut_pandangs'
+    __table_args__ = {'extend_existing':True, 'schema' : 'reklame',} 
+    nilai          = Column(Float)
+    disabled       = Column(SmallInteger, nullable=False, default=0) 
+    
+## Bahan ##
+class Bahan(Base, osExtendModel):
+    __tablename__  = 'bahans'
+    __table_args__ = {'extend_existing':True, 'schema' : 'reklame',} 
+    nilai          = Column(Float)
+    disabled       = Column(SmallInteger, nullable=False, default=0)
+
+## Jenis / Nilai Sewa Reklame ##
+class JenisReklame(Base, osExtendModel):
+    __tablename__  = 'jenis_reklame'
+    __table_args__ = {'extend_existing':True, 'schema' : 'reklame',}
+    rekening_id    = Column(Integer, ForeignKey("reklame.rekenings.id"), nullable=False) 
+    tarif          = Column(Float, nullable=False, default=0,
+                        server_default='0')
+    status         = Column(SmallInteger, nullable=False, default=1,
+                        server_default='1')
+    rekenings      = relationship("Rekening", backref=backref('jenis_reklame'))
+
+
+                        
+## Jenis / Nilai Sewa Reklame ##
+class Jenis(Base, osExtendModel):
+    __tablename__  = 'jenis'
     __table_args__ = {'extend_existing':True, 'schema' : 'reklame',}
     
     rekening_id    = Column(Integer, ForeignKey("reklame.rekenings.id"), nullable=False) 
-    nilai          = Column(Float)
+    nilai          = Column(BigInteger)
     disabled       = Column(SmallInteger, nullable=False, default=0)
     
-    rekenings      = relationship("Rekening", backref=backref('rek_nsr'))
+    rekenings      = relationship("Rekening", backref=backref('jenis'))
+    
+class JenisNssr(Base, osExtendModel):
+    __tablename__  = 'jenis_nssr'
+    __table_args__ = {'extend_existing':True, 'schema' : 'reklame',}
+    status         = Column(SmallInteger, nullable=False, default=1,
+                        server_default='1')
+                        
+## Nilai Satuan Strategis Reklame ##
+class Nssr(Base, osExtendModel):
+    __tablename__  = 'nssr'
+    __table_args__ = {'extend_existing':True, 'schema' : 'reklame',} 
+    luas_min       = Column(Integer, default=0)
+    luas_max       = Column(Integer, default=0)
+    nilai          = Column(BigInteger)
+    status         = Column(SmallInteger, nullable=False, default=0)
+    jenis_nssr_id  = Column(Integer, ForeignKey("reklame.jenis_nssr.id"), nullable=False)
+    jenis_nssr     = relationship("JenisNssr", backref=backref('nssr'))
+    @classmethod
+    def search_by_luas(cls, jenis_nssr_id,luas):
+        return DBSession.query(cls).\
+                  filter(cls.jenis_nssr_id==jenis_nssr_id,
+                          cls.luas_min <= luas,
+                          cls.luas_max > luas).first()
+
+## Nilai Jual Objek Pajak Reklame ##
+class Njop(Base, osExtendModel):
+    __tablename__  = 'njop'
+    __table_args__ = {'extend_existing':True, 'schema' : 'reklame',} 
+    luas_min       = Column(Integer, default=0)
+    luas_max       = Column(Integer, default=0)
+    nilai          = Column(BigInteger)
+    jenis_reklame_id = Column(Integer, ForeignKey("reklame.jenis_reklame.id"), nullable=False)
+    status         = Column(SmallInteger, nullable=False, default=0)
+    jenis_reklame  =  relationship("JenisReklame", backref=backref('njop'))
+    
+    @classmethod
+    def search_by_luas(cls, jenis_reklame_id,luas):
+        return DBSession.query(cls).\
+                  filter(cls.jenis_reklame_id==jenis_reklame_id,
+                          cls.luas_min <= luas,
+                          cls.luas_max > luas).first()
     
 ## Objek Pajak Reklame ##
-class OPreklame(Base, osExtendModel):
-    __tablename__  = 'op_reklames'
+class Reklame(Base, osExtendModel):
+    __tablename__  = 'reklames'
     __table_args__ = {'extend_existing':True, 'schema' : 'reklame',} 
 
-    #kode          = Column(String(32)) || kecamatan + kelurahan + jalan + no_urut (007.001.001-0001)
-    pemilik_id     = Column(Integer, ForeignKey("reklame.pemiliks.id"),   nullable=False) 
-    rekening_id    = Column(Integer, ForeignKey("reklame.rekenings.id"),  nullable=False)
-    rek_nsr_id     = Column(Integer, ForeignKey("reklame.rek_nsr.id"),    nullable=False)
-    provinsi       = Column(String(64))
-    kabupaten      = Column(String(64))
-    kecamatan      = Column(String(64)) 
-    kelurahan_id   = Column(Integer, ForeignKey("reklame.kelurahans.id"), nullable=False) 
-    jalan_id       = Column(Integer, ForeignKey("reklame.jalans.id"),     nullable=False)	
-    alamat         = Column(String(255)) 
-    no_urut        = Column(Integer, nullable=True)
-    panjang        = Column(Float)
-    lebar          = Column(Float)
-    luas           = Column(Float)
-    muka           = Column(Integer)
-    sudut_pandang  = Column(String(64)) 
-    jumlah         = Column(Integer) 
-    ketinggian_id  = Column(Integer, ForeignKey("reklame.ketinggians.id"), nullable=False)
-    koordinat_x    = Column(Float) 
-    koordinat_y    = Column(Float)
-    disabled       = Column(SmallInteger, nullable=False, default=0)
+    #kode            = Column(String(32)) || kecamatan + kelurahan + jalan + no_urut (007.001.001-0001)
+    #kecamatan_id     = Column(Integer, ForeignKey("reklame.kecamatans.id"),     nullable=False) 
+    #kelurahan_id     = Column(Integer, ForeignKey("reklame.kelurahans.id"),     nullable=False) 
+    kelas_jalan_id         = Column(Integer, ForeignKey("reklame.kelas_jalans.id"), nullable=False)	
+    no_urut          = Column(Integer, nullable=True)
+    #rekening_id      = Column(Integer, ForeignKey("reklame.rekenings.id"),      nullable=False)
+    jenis_reklame_id         = Column(Integer, ForeignKey("reklame.jenis_reklame.id"), nullable=False)
+    lokasi_id        = Column(Integer, ForeignKey("reklame.lokasi_pasangs.id"), nullable=False)
+    panjang          = Column(Float, default=1)
+    lebar            = Column(Float, default=1)
+    luas             = Column(Float, default=1) ## panjang * lebar * muka * jumlah_titik ##
+    tinggi           = Column(Integer, default=1)
+    muka             = Column(Integer, default=1)
+    jumlah_titik     = Column(Integer, default=1) 
+    sudut_id         = Column(Integer, ForeignKey("reklame.sudut_pandangs.id"), nullable=False)
+    lahan_id         = Column(SmallInteger, nullable=False, default=1) # 1 'Pemda', 2 'Swasta'
+    # pemilik_id       = Column(Integer, ForeignKey("reklame.pemiliks.id"),       nullable=False) 	
+    # bersinar         = Column(SmallInteger, nullable=False, default=0) # 0 'Tidak', 1 'Ya'	
+    # menempel         = Column(SmallInteger, nullable=False, default=0) # 0 'Tidak', 1 'Ya'	
+    # dalam_ruang      = Column(SmallInteger, nullable=False, default=0) # 0 'Tidak', 1 'Ya'
+    # koordinat_x      = Column(Float) 
+    # koordinat_y      = Column(Float)
+    status         = Column(SmallInteger, nullable=False, default=1)	
+    #alamat         = Column(String(255)) 
+    #ketinggian_id  = Column(Integer, ForeignKey("reklame.ketinggians.id"),    nullable=False)
     
-    pemiliks       = relationship("Pemilik",    backref=backref('op_reklames'))
-    rekenings      = relationship("Rekening",   backref=backref('op_reklames'))
-    rek_nsr        = relationship("Nsr",        backref=backref('op_reklames'))
-    kelurahans     = relationship("Kelurahan",  backref=backref('op_reklames'))
-    jalans         = relationship("Jalan",      backref=backref('op_reklames'))
-    ketinggians    = relationship("Ketinggian", backref=backref('op_reklames'))
+    # pemiliks       = relationship("Pemilik",    backref=backref('reklames'))
+    # rekenings      = relationship("Rekening",   backref=backref('reklames'))
+    # jenis          = relationship("Jenis",      backref=backref('reklames'))
+    # kecamatans     = relationship("Kecamatan",  backref=backref('reklames'))
+    # kelurahans     = relationship("Kelurahan",  backref=backref('reklames'))
+    # jalans         = relationship("Jalan",      backref=backref('reklames'))
+    # lokasi_pasangs = relationship("Lokasi",     backref=backref('reklames'))
+    # sudut_pandangs = relationship("Sudut",      backref=backref('reklames'))
+    #ketinggians    = relationship("Ketinggian", backref=backref('reklames'))
    
     @classmethod
     def max_no_urut(cls, kel_id, jln_id):
@@ -164,32 +245,81 @@ class OPreklame(Base, osExtendModel):
                 ).scalar() or 0
  	
 ## Transaksi Pajak Reklame ##
-class TransaksiPajak(Base, osExtendModel):
-    __tablename__  = 'transaksi_pajaks'
+class Transaksi(Base, osExtendModel):
+    __tablename__  = 'transaksis'
     __table_args__ = {'extend_existing':True, 'schema' : 'reklame',} 
 
-    op_reklame_id  = Column(Integer, ForeignKey("reklame.op_reklames.id"), nullable=False) 
-    tahun          = Column(Integer, nullable=False, default=0)
-    nopd           = Column(String(32))
+    nama_pemohon   = Column(String(64))
+    alamat_pemohon = Column(String(255)) 
+    #reklame_id     = Column(Integer, ForeignKey("reklame.reklames.id"), nullable=False) 
+    kode_reklame   = Column(String(32))
     npwpd          = Column(String(32))
+    nama_wp        = Column(String(64))
+    
+    #rekening_id      = Column(Integer, nullable=False)
+    jenis_reklame_id = Column(Integer, ForeignKey("reklame.jenis_reklame.id") ,nullable=False, )
+    jenis_reklame_ni = Column(Float ,nullable=False, )
+    njop             = Column(Float ,nullable=False, )
+    jml_ketinggian   = Column(Float ,nullable=False, )
+    kelas_jalan_ni   = Column(Float ,nullable=False, )
+    sudut_pandang_ni   = Column(Float ,nullable=False, )
+    lokasi_pasang_ni   = Column(Float ,nullable=False, )
+    faktor_lain_ni   = Column(Float ,nullable=False, )
+    nssr_ni   = Column(Float ,nullable=False, )
+    nsr              = Column(Float ,nullable=False, )
+    jenis_nssr_id    = Column(Integer, ForeignKey("reklame.jenis_nssr.id") ,nullable=False, )
+    lokasi_pasang_id = Column(Integer, ForeignKey("reklame.lokasi_pasangs.id"),nullable=False)
+    panjang          = Column(Float, default=1)
+    lebar            = Column(Float, default=1)
+    luas             = Column(Float, default=1) ## panjang * lebar * muka * jumlah_titik ##
+    tinggi           = Column(Integer, default=1)
+    muka             = Column(Integer, default=1)
+    jumlah_titik     = Column(Integer, default=1) 
+    sudut_pandang_id         = Column(Integer, ForeignKey("reklame.sudut_pandangs.id"),nullable=False)
+#    lahan_id         = Column(SmallInteger, ForeignKey("reklame.lahans.id"), nullable=False, default=1) # 1 'Pemda', 2 'Swasta'
+    ketinggian_id    = Column(SmallInteger, ForeignKey("reklame.ketinggians.id"), nullable=False, default=1) # 1 'Pemda', 2 'Swasta'
+    # pemilik_id       = Column(Integer, nullable=False) 	
+    # bersinar         = Column(SmallInteger, nullable=False, default=0) # 0 'Tidak', 1 'Ya'	
+    # menempel         = Column(SmallInteger, nullable=False, default=0) # 0 'Tidak', 1 'Ya'	
+    # dalam_ruang      = Column(SmallInteger, nullable=False, default=0) # 0 'Tidak', 1 'Ya'
+    
     periode_awal   = Column(Date)
     periode_akhir  = Column(Date)
     no_skpd        = Column(String(32))
     tgl_skpd       = Column(Date)
     no_bayar       = Column(String(32))
     tgl_bayar      = Column(Date)
-    no_permohonan  = Column(String(255)) 
-    id_permohonan  = Column(Integer, default=0)
+    dasar          = Column(Float, default=0)
+    tarif          = Column(Integer, default=0)
+    pokok          = Column(Float, default=0)
+    denda          = Column(Float, default=0)
+    bunga          = Column(Float, default=0)
+    kompensasi          = Column(Float, default=0)
+    kenaikan          = Column(Float, default=0)
+    lain          = Column(Float, default=0)
+    jml_terhutang  = Column(Float, default=0)
+    
+    no_permohonan  = Column(String(32)) 
+    id_permohonan  = Column(String(32))
     tgl_permohonan = Column(Date)
     no_sk_ipr      = Column(String(64))
     tgl_sk_ipr     = Column(Date)
-    nilai_pjk      = Column(BigInteger)
-    denda_pjk      = Column(BigInteger)
-    jumlah_byr     = Column(BigInteger)
-    wp_nama        = Column(String(64))
-    wp_alamat      = Column(String(255)) 
-    jumlah_op      = Column(BigInteger) 
-    naskah         = Column(String(255)) 
-    disabled       = Column(SmallInteger, nullable=False, default=0)
+    kelas_jalan_id = Column(Integer, ForeignKey("reklame.kelas_jalans.id"), nullable=False)
+    status       = Column(SmallInteger, nullable=False, default=0)
+    #nopd           = Column(String(32))
+    #tahun          = Column(Integer, nullable=False, default=0)
+    #naskah         = Column(String(255)) 
     
-    op_reklames    = relationship("OPreklame",   backref=backref('transaksi_pajaks'))
+    jenis_reklames    = relationship("JenisReklame",   backref=backref('transaksis'))
+    # pemiliks       = relationship("Pemilik",    backref=backref('reklames'))
+    # rekenings      = relationship("Rekening",   backref=backref('reklames'))
+    # jenis          = relationship("Jenis",      backref=backref('reklames'))
+    # kecamatans     = relationship("Kecamatan",  backref=backref('reklames'))
+    # kelurahans     = relationship("Kelurahan",  backref=backref('reklames'))
+    # jalans         = relationship("Jalan",      backref=backref('reklames'))
+    kelas_jalans = relationship("KelasJalan",     backref=backref('reklames'))
+    jenis_nssr = relationship("JenisNssr",     backref=backref('reklames'))
+    lokasi_pasangs = relationship("Lokasi",     backref=backref('reklames'))
+    sudut_pandangs = relationship("Sudut",      backref=backref('reklames'))
+    ketinggians    = relationship("Ketinggian", backref=backref('reklames'))
+       

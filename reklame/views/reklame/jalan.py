@@ -16,7 +16,7 @@ from ...models import(
     DBSession,
     )
 from ...models.reklame import (
-    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Rekening, OPreklame, TransaksiPajak
+    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Rekening, Reklame, Transaksi
     )
 from datatables import ColumnDT, DataTables
 from datetime import datetime
@@ -314,7 +314,7 @@ def view_delete(request):
     if not row:
         return id_not_found(request)
         
-    a = DBSession.query(OPreklame).filter(OPreklame.jalan_id==uid).first()
+    a = DBSession.query(Reklame).filter(Reklame.jalan_id==uid).first()
     if a:
         request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Objek Pajak.', 'error')
         return route_list(request)

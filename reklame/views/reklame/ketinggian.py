@@ -16,11 +16,11 @@ from ...models import(
     DBSession,
     )
 from ...models.reklame import (
-    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Ketinggian, Nsr, Rekening, OPreklame, TransaksiPajak
+    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Ketinggian, Jenis, Rekening, Reklame, Transaksi
     )
 from datatables import ColumnDT, DataTables
 from datetime import datetime
-from ...tools import create_now
+from ...tools import create_now,_DTnumberformat
 
 SESS_ADD_FAILED = 'Ketinggian add failed'
 SESS_EDIT_FAILED = 'Ketinggian edit failed'
@@ -49,14 +49,16 @@ def ketinggian_act(request):
         columns.append(ColumnDT('id'))
         columns.append(ColumnDT('kode'))
         columns.append(ColumnDT('nama'))
-        columns.append(ColumnDT('nilai'))
+        columns.append(ColumnDT('tinggi_min', filter=_DTnumberformat))
+        columns.append(ColumnDT('tinggi_max', filter=_DTnumberformat))
+        columns.append(ColumnDT('nilai',      filter=_DTnumberformat))
         columns.append(ColumnDT('disabled'))
         
         query = DBSession.query(Ketinggian)
         rowTable = DataTables(req, Ketinggian, query, columns)
         return rowTable.output_result()
         
-    elif url_dict['act']=='hon_tinggi':
+    elif url_dict['act']=='hon':
         term = 'term' in params and params['term'] or '' 
         rows = DBSession.query(Ketinggian.id, 
                                Ketinggian.kode, 
@@ -75,7 +77,7 @@ def ketinggian_act(request):
             r.append(d)
         return r   
            
-    elif url_dict['act']=='hok_tinggi':
+    elif url_dict['act']=='hok':
         term = 'term' in params and params['term'] or '' 
         rows = DBSession.query(Ketinggian.id, 
                                Ketinggian.kode, 
@@ -150,11 +152,23 @@ class AddSchema(colander.Schema):
                     oid = "nama",
                     title = "Uraian",)
     nilai         = colander.SchemaNode(
-                    colander.Float(),
+                    colander.Integer(),
                     default = 0,
                     #missing=colander.drop,
                     oid = "nilai",
                     title = "Nilai")
+    tinggi_min    = colander.SchemaNode(
+                    colander.Integer(),
+                    default = 0,
+                    #missing=colander.drop,
+                    oid = "tinggi_min",
+                    title = "Tinggi min")
+    tinggi_max    = colander.SchemaNode(
+                    colander.Integer(),
+                    default = 0,
+                    #missing=colander.drop,
+                    oid = "tinggi_max",
+                    title = "Tinggi max")
     disabled      = colander.SchemaNode(
                     colander.Integer(),
                     widget=deferred_status)
@@ -262,10 +276,10 @@ def view_delete(request):
     if not row:
         return id_not_found(request)
         
-    a = DBSession.query(Ketinggian).filter(Ketinggian.ketinggian_id==uid).first()
-    if a:
-        request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Objek Pajak.', 'error')
-        return route_list(request)
+    #a = DBSession.query(Reklame).filter(Reklame.ketinggian_id==uid).first()
+    #if a:
+    #    request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Objek Pajak.', 'error')
+    #    return route_list(request)
         
     form = Form(colander.Schema(), buttons=('hapus','batal'))
     if request.POST:

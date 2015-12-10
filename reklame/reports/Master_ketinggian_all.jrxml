@@ -23,6 +23,12 @@
 	<field name="ket_ni" class="java.lang.String">
 		<fieldDescription><![CDATA[ket_ni]]></fieldDescription>
 	</field>
+	<field name="ket_min" class="java.lang.String">
+		<fieldDescription><![CDATA[ket_min]]></fieldDescription>
+	</field>
+	<field name="ket_max" class="java.lang.String">
+		<fieldDescription><![CDATA[ket_max]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -47,7 +53,7 @@
 	<pageHeader>
 		<band height="12" splitType="Stretch">
 			<staticText>
-				<reportElement x="98" y="0" width="253" height="12"/>
+				<reportElement x="76" y="0" width="253" height="12"/>
 				<box>
 					<topPen lineWidth="0.25"/>
 					<leftPen lineWidth="0.25"/>
@@ -60,7 +66,7 @@
 				<text><![CDATA[Uraian]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="98" height="12"/>
+				<reportElement x="0" y="0" width="76" height="12"/>
 				<box>
 					<topPen lineWidth="0.25"/>
 					<leftPen lineWidth="0.25"/>
@@ -73,7 +79,7 @@
 				<text><![CDATA[Kode]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="477" y="0" width="66" height="12"/>
+				<reportElement x="498" y="0" width="45" height="12"/>
 				<box>
 					<topPen lineWidth="0.25"/>
 					<leftPen lineWidth="0.25"/>
@@ -86,7 +92,7 @@
 				<text><![CDATA[In-aktif]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="351" y="0" width="126" height="12"/>
+				<reportElement x="426" y="0" width="72" height="12"/>
 				<box>
 					<topPen lineWidth="0.25"/>
 					<leftPen lineWidth="0.25"/>
@@ -98,6 +104,32 @@
 				</textElement>
 				<text><![CDATA[Nilai]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="329" y="0" width="48" height="12"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tinggi Min]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="0" width="49" height="12"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tinggi Max]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -106,7 +138,7 @@
 	<detail>
 		<band height="14" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="5" y="0" width="93" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="5" y="0" width="71" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
@@ -117,7 +149,7 @@
 				<textFieldExpression><![CDATA[$F{ket_kd}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="104" y="0" width="247" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="82" y="0" width="247" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
@@ -128,7 +160,7 @@
 				<textFieldExpression><![CDATA[$F{ket_nm}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="98" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="76" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.25"/>
 					<rightPen lineWidth="0.25"/>
@@ -138,7 +170,7 @@
 				</textElement>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="98" y="0" width="253" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="76" y="0" width="253" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.25"/>
 					<rightPen lineWidth="0.25"/>
@@ -148,14 +180,14 @@
 				</textElement>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="477" y="0" width="66" height="14"/>
+				<reportElement x="498" y="0" width="45" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dis}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="477" y="0" width="66" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="498" y="0" width="45" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.25"/>
 					<rightPen lineWidth="0.25"/>
@@ -165,7 +197,7 @@
 				</textElement>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="351" y="0" width="126" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="426" y="0" width="72" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.25"/>
 					<rightPen lineWidth="0.25"/>
@@ -175,7 +207,7 @@
 				</textElement>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="351" y="0" width="126" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="426" y="0" width="72" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
@@ -184,6 +216,48 @@
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ket_ni}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="329" y="0" width="48" height="14"/>
+				<box leftPadding="3">
+					<leftPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="377" y="0" width="49" height="14"/>
+				<box leftPadding="3">
+					<leftPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="329" y="0" width="48" height="14"/>
+				<box leftPadding="3">
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ket_min}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="377" y="0" width="49" height="14"/>
+				<box leftPadding="3">
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ket_max}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

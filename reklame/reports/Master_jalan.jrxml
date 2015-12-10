@@ -47,7 +47,7 @@
 	<pageHeader>
 		<band height="12" splitType="Stretch">
 			<staticText>
-				<reportElement x="98" y="0" width="234" height="12"/>
+				<reportElement x="63" y="0" width="327" height="12"/>
 				<box>
 					<topPen lineWidth="0.25"/>
 					<leftPen lineWidth="0.25"/>
@@ -60,7 +60,7 @@
 				<text><![CDATA[Nama]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="98" height="12"/>
+				<reportElement x="0" y="0" width="63" height="12"/>
 				<box>
 					<topPen lineWidth="0.25"/>
 					<leftPen lineWidth="0.25"/>
@@ -86,7 +86,7 @@
 				<text><![CDATA[In-aktif]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="332" y="0" width="145" height="12"/>
+				<reportElement x="390" y="0" width="87" height="12"/>
 				<box>
 					<topPen lineWidth="0.25"/>
 					<leftPen lineWidth="0.25"/>
@@ -106,18 +106,18 @@
 	<detail>
 		<band height="14" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="5" y="0" width="93" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="63" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{jln_kd}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="104" y="0" width="228" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="68" y="0" width="322" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
@@ -128,7 +128,7 @@
 				<textFieldExpression><![CDATA[$F{jln_nm}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="98" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="63" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.25"/>
 					<rightPen lineWidth="0.25"/>
@@ -138,7 +138,7 @@
 				</textElement>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="98" y="0" width="234" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="63" y="0" width="327" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.25"/>
 					<rightPen lineWidth="0.25"/>
@@ -165,7 +165,7 @@
 				</textElement>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="332" y="0" width="145" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="390" y="0" width="87" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.25"/>
 					<rightPen lineWidth="0.25"/>
@@ -175,12 +175,12 @@
 				</textElement>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="338" y="0" width="139" height="14"/>
+				<reportElement stretchType="RelativeToBandHeight" x="390" y="0" width="87" height="14"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{kls_nm}]]></textFieldExpression>

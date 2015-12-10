@@ -1,0 +1,47 @@
+id,kode,rekening_id,nama,nilai,disabled
+1,"101",2,"TP Pemda / Jalan Tol / Shelter < 1",125000,0
+2,"102",2,"TP Pemda / Jalan Tol / Shelter 1-2",250000,0
+3,"103",2,"TP Pemda / Jalan Tol / Shelter 2-4",500000,0
+4,"104",2,"TP Pemda / Jalan Tol / Shelter 4-10",1250000,0
+5,"105",2,"TP Pemda / Jalan Tol / Shelter 10-16",2500000,0
+6,"106",2,"TP Pemda / Jalan Tol / Shelter 16-24",4500000,0
+7,"107",2,"TP Pemda / Jalan Tol / Shelter 24-50",6000000,0
+8,"108",2,"TP Pemda / Jalan Tol / Shelter > 50",7500000,0
+9,"201",2,"TP Swasta / Di Atas Bangunan < 1",62500,0
+10,"202",2,"TP Swasta / Di Atas Bangunan 1-2",125000,0
+11,"203",2,"TP Swasta / Di Atas Bangunan 2-4",250000,0
+12,"204",2,"TP Swasta / Di Atas Bangunan 4-10",625000,0
+13,"205",2,"TP Swasta / Di Atas Bangunan 10-16",1250000,0
+14,"206",2,"TP Swasta / Di Atas Bangunan 16-24",2250000,0
+15,"207",2,"TP Swasta / Di Atas Bangunan 24-50",3000000,0
+16,"208",2,"TP Swasta / Di Atas Bangunan > 50",3750000,0
+17,"301",11,"MPBLR < 1",37500,0
+18,"302",11,"MPBLR 1-2",75000,0
+19,"303",11,"MPBLR 2-4",150000,0
+20,"304",11,"MPBLR 4-10",375000,0
+21,"305",11,"MPBLR 10-16",750000,0
+22,"306",11,"MPBLR 16-24",1350000,0
+23,"307",11,"MPBLR 24-50",1800000,0
+24,"308",11,"MPBLR > 50",2250000,0
+25,"401",11,"MPBDR < 1",15625,0
+26,"402",11,"MPBDR 1-2",31250,0
+27,"403",11,"MPBDR 2-4",62500,0
+28,"404",11,"MPBDR 4-10",156250,0
+29,"405",11,"MPBDR 10-16",312500,0
+30,"406",11,"MPBDR 16-24",562500,0
+31,"407",11,"MPBDR 24-50",750000,0
+32,"408",11,"MPBDR > 50",937500,0
+33,"501",2,"Megatron / Videotron / Bando / LED / Dinamics Wall / Video Wall",7500000,0
+34,"502",6,"Berjalan Lebih 4 Roda",1000000,0
+35,"503",6,"Berjalan Roda 4",750000,0
+36,"504",6,"Berjalan Roda 2 / Roda 3",250000,0
+37,"505",6,"Rombong",1000000,0
+38,"506",3,"Painting Wall / Branding Wall",1000000,0
+39,"507",3,"Baligho / Banner",25000,0
+40,"508",3,"Spanduk / Umbul-Umbul",1500,0
+41,"509",4,"Poster / Tempelan (>A3)",750,0
+42,"510",5,"Selebaran / Brosur (<=A3)",250,0
+43,"511",8,"Balon Udara",500000,0
+44,"512",10,"Film / Slide",50000,0
+45,"513",11,"Peragaan",50000,0
+46,"514",2,"JPO / Fly Over",7500000,0

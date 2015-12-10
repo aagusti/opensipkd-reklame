@@ -88,9 +88,8 @@ def get_title(request):
     route_name = request.matched_route.name
     return titles[route_name]
 
-main_title = 'Pajak Reklame'
+main_title = 'TiRek'
 titles = {}
-
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -130,7 +129,7 @@ def main(global_config, **settings):
         config.add_route(route.kode, route.path)
         if route.nama:
             titles[route.kode] = ' - '.join([main_title, route.nama])     
-
+            print route.kode, route.nama, route.path
     config.scan()
     
     app = config.make_wsgi_app()

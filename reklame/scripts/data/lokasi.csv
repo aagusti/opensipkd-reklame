@@ -1,0 +1,26 @@
+id,kode,nama,nilai,disabled
+1,"001","Ruang Terbuka Hijau",3.5,0
+2,"002","Arena Terbuka",3.5,0
+3,"003","Median Jalan",3.5,0
+4,"004","Di Atas Bangunan",3.5,0
+5,"005","Di Atas Jembatan",3.5,0
+6,"006","Terowongan Penyeberangan",3.5,0
+7,"007","Ornamen Kota",3.5,0
+8,"008","Fly Over",3.5,0
+9,"009","Area Tol",3.5,0
+10,"010","Kendaraan / Berjalan",3.5,0
+11,"011","Balon Udara",3.5,0
+12,"012","Sisi Luar Trotoar",2.1,0
+13,"013","Bahu Jalan",2.1,0
+14,"014","Shelter",2.1,0
+15,"015","Di Halaman Gedung / Rumah",1.75,0
+16,"016","Terminal",1.4,0
+17,"017","Stasiun",1.4,0
+18,"018","Pasar",1.4,0
+19,"019","Gelanggang Olah Raga",1.05,0
+20,"020","MPBLR",0.7,0
+21,"021","MPBDR",0.35,0
+22,"022","Painting Wall / Branding Wall",0.7,0
+23,"023","Spanduk / Umbul-umbul",3.5,0
+24,"024","Selebaran / Poster / Brosur",0.7,0
+25,"025","Film / Slide / Peragaan",1.4,0

@@ -16,7 +16,7 @@ from ...models import(
     DBSession,
     )
 from ...models.reklame import (
-    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Rekening, OPreklame, TransaksiPajak
+    Kecamatan, Kelurahan, KelasJalan, Jalan, Jenis, Sudut, Lokasi, Pemilik, Rekening, Reklame, Transaksi
     )
 from datatables import ColumnDT, DataTables
 from datetime import datetime
@@ -49,86 +49,17 @@ def transaksi_act(request):
         columns.append(ColumnDT('id'))
         columns.append(ColumnDT('kode'))
         columns.append(ColumnDT('nama'))
-        columns.append(ColumnDT('tahun'))
-        columns.append(ColumnDT('nopd'))
         columns.append(ColumnDT('no_skpd'))
-        columns.append(ColumnDT('op_reklames.nama'))
+        # columns.append(ColumnDT('kode_reklame'))
+        # columns.append(ColumnDT('reklames.nama'))
         columns.append(ColumnDT('periode_awal',  filter=_DTstrftime))
         columns.append(ColumnDT('periode_akhir', filter=_DTstrftime))
-        columns.append(ColumnDT('jumlah_byr',    filter=_DTnumberformat))
-        columns.append(ColumnDT('disabled'))
+        columns.append(ColumnDT('jml_terhutang',     filter=_DTnumberformat))
+        columns.append(ColumnDT('status'))
         
-        query = DBSession.query(TransaksiPajak)
-        rowTable = DataTables(req, TransaksiPajak, query, columns)
+        query = DBSession.query(Transaksi)
+        rowTable = DataTables(req, Transaksi, query, columns)
         return rowTable.output_result()
-    
-    elif url_dict['act']=='grid1':
-        cari = 'cari' in params and params['cari'] or ''
-        columns = []
-        columns.append(ColumnDT('id'))
-        columns.append(ColumnDT('kode'))
-        columns.append(ColumnDT('nama'))
-        columns.append(ColumnDT('tahun'))
-        columns.append(ColumnDT('nopd'))
-        columns.append(ColumnDT('no_skpd'))
-        columns.append(ColumnDT('op_reklames.nama'))
-        columns.append(ColumnDT('periode_awal',  filter=_DTstrftime))
-        columns.append(ColumnDT('periode_akhir', filter=_DTstrftime))
-        columns.append(ColumnDT('jumlah_byr',    filter=_DTnumberformat))
-        columns.append(ColumnDT('disabled'))
-        
-        query = DBSession.query(TransaksiPajak
-                        ).join(OPreklame
-                        ).filter(TransaksiPajak.op_reklame_id == OPreklame.id,
-                                 or_(TransaksiPajak.kode.ilike('%%%s%%' % cari),
-                                     TransaksiPajak.nama.ilike('%%%s%%' % cari),
-                                     OPreklame.nama.ilike('%%%s%%' % cari),
-                                     )
-                        )
-        rowTable = DataTables(req, TransaksiPajak, query, columns)
-        return rowTable.output_result()
-        
-    elif url_dict['act']=='hon_transaksi':
-        term = 'term' in params and params['term'] or '' 
-        rows = DBSession.query(TransaksiPajak.id, 
-                               TransaksiPajak.kode, 
-                               TransaksiPajak.nama, 
-                               TransaksiPajak.nopd, 
-                               TransaksiPajak.no_skpd
-                       ).filter(TransaksiPajak.nama.ilike('%%%s%%' % term) 
-                       ).all()
-        r = []
-        for k in rows:
-            d={}
-            d['id']      = k[0]
-            d['value']   = k[2]
-            d['kode']    = k[1]
-            d['nama']    = k[2]
-            d['nopd']    = k[3]
-            d['skpd']    = k[4]
-            r.append(d)
-        return r   
-           
-    elif url_dict['act']=='hok_transaksi':
-        term = 'term' in params and params['term'] or '' 
-        rows = DBSession.query(TransaksiPajak.id, 
-                               TransaksiPajak.kode, 
-                               TransaksiPajak.nama, 
-                               TransaksiPajak.nopd, 
-                               TransaksiPajak.no_skpd
-                       ).filter(TransaksiPajak.kode.ilike('%%%s%%' % term) 
-                       ).all()
-        r = []
-        for k in rows:
-            d={}
-            d['id']      = k[0]
-            d['value']   = k[1]
-            d['kode']    = k[1]
-            d['nama']    = k[2]
-            d['nopd']    = k[3]
-            d['skpd']    = k[4]
-            r.append(d)
-        return r    
              
     
 #######    
@@ -146,21 +77,14 @@ def form_validator(form, value):
                 
     if 'id' in form.request.matchdict:
         uid = form.request.matchdict['id']
-        q = DBSession.query(TransaksiPajak).filter_by(id=uid)
+        q = DBSession.query(Transaksi).filter_by(id=uid)
         transaksi = q.first()
     else:
         transaksi = None
         
-    q = DBSession.query(TransaksiPajak).filter_by(kode=value['kode'])
-    found = q.first()
-    if transaksi:
-        if found and found.id != transaksi.id:
-            err_kode()
-    elif found:
-        err_kode()
         
     if 'nama' in value: # optional
-        found = TransaksiPajak.get_by_nama(value['nama'])
+        found = Transaksi.get_by_nama(value['nama'])
         if transaksi:
             if found and found.id != transaksi.id:
                 err_nama()
@@ -192,84 +116,86 @@ IS_SUDUT = (
     ('Indoor', 'Indoor'),
     )
 
+# Untuk pilihan Bersinar
+@colander.deferred
+def deferred_bersinar(node, kw):
+    values = kw.get('daftar_bersinar', [])
+    return widget.SelectWidget(values=values)
+    
+IS_BERSINAR = (
+    (0, 'Tidak'),
+    (1, 'Ya'),
+    )     
+    
+# Untuk pilihan Menempel
+@colander.deferred
+def deferred_menempel(node, kw):
+    values = kw.get('daftar_menempel', [])
+    return widget.SelectWidget(values=values)
+    
+IS_MENEMPEL = (
+    (0, 'Tidak'),
+    (1, 'Ya'),
+    )
+    
+# Untuk pilihan Dalam Ruang
+@colander.deferred
+def deferred_druang(node, kw):
+    values = kw.get('daftar_druang', [])
+    return widget.SelectWidget(values=values)
+    
+IS_DRUANG = (
+    (0, 'Tidak'),
+    (1, 'Ya'),
+    )     
+    
+# Untuk pilihan Lahan
+@colander.deferred
+def deferred_lahan(node, kw):
+    values = kw.get('daftar_lahan', [])
+    return widget.SelectWidget(values=values)
+    
+IS_LAHAN = (
+    (1, 'Pemda'),
+    (2, 'Swasta'),
+    )     
+
+
 class AddSchema(colander.Schema):
+    widgetMoney = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                                 
     kode          = colander.SchemaNode(
                     colander.String(),
                     oid = "kode",
-                    title = "Kode",)
+                    title = "Kode",
+                    missing=colander.drop)
     nama          = colander.SchemaNode(
                     colander.String(),
                     oid = "nama",
-                    title = "Uraian",)
-    op_reklame_id = colander.SchemaNode(
-                    colander.Integer(),
-                    oid="op_reklame_id",
-                    missing=colander.drop)
-    op_reklame_nm = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="op_reklame_nm",
-                    title="Objek",)
-    tahun         = colander.SchemaNode(
-                    colander.Integer(),
-                    oid="tahun",
-                    missing=colander.drop,
-                    title="Tahun",)
-    nopd          = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="nopd",
-                    title="NOPD",)
-    npwpd         = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="npwpd",
-                    title="NPWPD",)
-    periode_awal  = colander.SchemaNode(
-                    colander.Date(),
-                    #missing=colander.drop,
-                    oid="periode_awal",
-                    title="Periode")
-    periode_akhir = colander.SchemaNode(
-                    colander.Date(),
-                    #missing=colander.drop,
-                    oid="periode_akhir",
-                    title="Tgl akhir")
-    no_skpd       = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="no_skpd",
-                    title="No.SKPD")
-    tgl_skpd      = colander.SchemaNode(
-                    colander.Date(),
-                    #missing=colander.drop,
-                    oid="tgl_skpd",
-                    title="Tanggal")
-    no_bayar      = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="no_bayar",
-                    title="No.Bayar")
-    tgl_bayar     = colander.SchemaNode(
-                    colander.Date(),
-                    #missing=colander.drop,
-                    oid="tgl_bayar",
-                    title="Tanggal")
+                    title = "Naskah",)
     no_permohonan = colander.SchemaNode(
                     colander.String(),
-                    #missing=colander.drop,
                     oid="no_permohonan",
-                    title="Nomor")
+                    title="Permohonan")
     id_permohonan = colander.SchemaNode(
                     colander.Integer(),
-                    missing=colander.drop,
+                    #missing=colander.drop,
                     oid="id_permohonan",
-                    title="Permohonan")
+                    title="ID")
     tgl_permohonan = colander.SchemaNode(
                     colander.Date(),
                     #missing=colander.drop,
                     oid="tgl_permohonan",
                     title="Tanggal")
+    nama_pemohon  = colander.SchemaNode(
+                    colander.String(),
+                    oid="nama_pemohon",
+                    title="Pemohon",)
+    alamat_pemohon = colander.SchemaNode(
+                    colander.String(),
+                    oid="alamat_pemohon",
+                    title="Alamat",)
     no_sk_ipr     = colander.SchemaNode(
                     colander.String(),
                     #missing=colander.drop,
@@ -280,48 +206,343 @@ class AddSchema(colander.Schema):
                     #missing=colander.drop,
                     oid="tgl_sk_ipr",
                     title="Tanggal")
-    nilai_pjk     = colander.SchemaNode(
+    periode_awal  = colander.SchemaNode(
+                    colander.Date(),
+                    oid="periode_awal",
+                    title="Periode")
+    periode_akhir = colander.SchemaNode(
+                    colander.Date(),
+                    oid="periode_akhir",
+                    title="Tgl akhir")
+    npwpd         = colander.SchemaNode(
+                    colander.String(),
+                    oid="npwpd",
+                    title="NPWPD",)
+    nama_wp       = colander.SchemaNode(
+                    colander.String(),
+                    oid="nama_wp",
+                    title="Nama WP",)
+    no_skpd       = colander.SchemaNode(
+                    colander.String(),
+                    oid="no_skpd",
+                    title="No.SKPD")
+    tgl_skpd      = colander.SchemaNode(
+                    colander.Date(),
+                    oid="tgl_skpd",
+                    title="Tanggal")
+    jenis_reklame_id      = colander.SchemaNode(
                     colander.Integer(),
-                    #missing=colander.drop,
-                    oid="nilai_pjk",
-                    title="Nilai",
+                    oid="jenis_reklame_id",
+                    missing=colander.drop)
+    jenis_reklame_nm      = colander.SchemaNode(
+                    colander.String(),
+                    oid="jenis_reklame_nm",
+                    title="Jenis",)
+    jenis_reklame_ni      = colander.SchemaNode(
+                    colander.Decimal(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="jenis_reklame_ni",
+                    title="NJOP",
                     default=1)
-    denda_pjk     = colander.SchemaNode(
+    panjang       = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="panjang",
+                    title="Panjang",
+                    default=1.00)
+    lebar         = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="lebar",
+                    title="Lebar",
+                    default=1.00)
+
+    muka          = colander.SchemaNode(
                     colander.Integer(),
-                    missing=colander.drop,
-                    oid="denda_pjk",
-                    title="Denda",
-                    default=0)
-    jumlah_byr    = colander.SchemaNode(
+                    oid="muka",
+                    title="Muka",
+                    default=1)
+    jumlah_titik  = colander.SchemaNode(
                     colander.Integer(),
-                    missing=colander.drop,
-                    oid="jumlah_byr",
-                    title="Jumlah.Bayar")
-    wp_nama       = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="wp_nama",
-                    title="WP",)
-    wp_alamat     = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="wp_alamat",
-                    title="Alamat WP",)
-    jumlah_op     = colander.SchemaNode(
-                    colander.Integer(),
-                    missing=colander.drop,
-                    oid="jumlah_op",
+                    oid="jumlah_titik",
                     title="Jumlah",
                     default=1)
-    naskah        = colander.SchemaNode(
+    luas          = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="luas",
+                    title="Luas",
+                    default=1.00)
+    njop          = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="njop",
+                    title="Jml. NJOP")
+                    
+    ketinggian_id   = colander.SchemaNode(
+                    colander.String(),
+                    oid="ketinggian_id",
+                    missing=colander.drop)
+    ketinggian_nm   = colander.SchemaNode(
+                    colander.String(),
+                    oid="ketinggian_nm",
+                    title="Ketinggian",)
+    ketinggian_ni   = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="ketinggian_ni",
+                    title="Nilai",
+                    default=0)
+    tinggi        = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="tinggi",
+                    title="Tinggi",
+                    default=1)
+    jml_ketinggian = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="jml_ketinggian",
+                    title="Jml Ket.",
+                    default=0)                    
+    jenis_nssr_id = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="nssr_id",)
+    jenis_nssr_kd = colander.SchemaNode(
+                    colander.String(),
+                    oid="nssr_kd",
+                    title="NSSR",)                    
+    jenis_nssr_nm = colander.SchemaNode(
+                    colander.String(),
+                    oid="nssr_nm",
+                    title="NSSR",)                    
+    nssr_ni = colander.SchemaNode(
+                    colander.Float(),
+                    oid="nssr_ni",
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    title="Nilai NSSR",
+                    default = 0,)                    
+    nsr = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="nsr",
+                    title="Jml. NSR",
+                    default = 0,)  
+    kelas_jalan_id = colander.SchemaNode(
+                    colander.String(),
+                    oid="kelas_jalan_id",)
+    kelas_jalan_kd = colander.SchemaNode(
+                    colander.String(),
+                    oid="kelas_jalan_kd",
+                    title="Kelas Jalan",)    
+    kelas_jalan_nm = colander.SchemaNode(
+                    colander.String(),
+                    oid="kelas_jalan_nm",
+                    title="Kls. Jalan",)                    
+    kelas_jalan_ni = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="kelas_jalan_ni",
+                    title="Nilai Klas",
+                    default = 0,)                    
+    sudut_pandang_id      = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="sudut_pandang_id",
+                    missing=colander.drop)
+    sudut_pandang_kd      = colander.SchemaNode(
+                    colander.String(),
+                    missing=colander.drop,
+                    oid="sudut_pandang_kd",
+                    title="Sdt Pdg",)
+    sudut_pandang_nm      = colander.SchemaNode(
                     colander.String(),
                     #missing=colander.drop,
-                    oid="naskah",
-                    title="Naskah",)
-    disabled      = colander.SchemaNode(
+                    oid="sudut_pandang_nm",
+                    title="Sdt Pandang",)
+    sudut_pandang_ni = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="sudut_pandang_ni",
+                    title="Nilai SP",
+                    default = 0,)
+    lokasi_pasang_id     = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="lokasi_pasang_id",
+                    missing=colander.drop)
+    lokasi_pasang_kd     = colander.SchemaNode(
+                    colander.String(),
+                    missing=colander.drop,
+                    oid="lokasi_pasang_kd",
+                    title="Lokasi",)
+    lokasi_pasang_nm     = colander.SchemaNode(
+                    colander.String(),
+                    oid="lokasi_pasang_nm",
+                    title="Lokasi",)
+    lokasi_pasang_ni = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="lokasi_pasang_ni",
+                    title="Nilai Lok",
+                    default = 0,)                    
+                
+    faktor_lain_id   = colander.SchemaNode(
+                    colander.Integer(),
+                    missing=colander.drop,
+                    oid="faktor_lain_id",
+                    default=0)
+    faktor_lain_kd   = colander.SchemaNode(
+                    colander.Integer(),
+                    missing=colander.drop,
+                    oid="faktor_lain_kd",
+                    title="Faktor Lain",
+                    default=0)
+    faktor_lain_nm   = colander.SchemaNode(
+                    colander.Integer(),
+                    missing=colander.drop,
+                    oid="faktor_lain_nm",
+                    title="Faktor Lain",
+                    default=0)
+    faktor_lain_ni   = colander.SchemaNode(
+                colander.Integer(),
+                missing=colander.drop,
+                oid="faktor_lain_ni",
+                title="Persen",
+                default=0)
+    dasar         = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="dasar",
+                    title="Dasar",
+                    default=0)
+    tarif         = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="tarif",
+                    title="Tarif",
+                    default=0)
+    pokok     = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="pokok",
+                    title="Pokok",
+                    default=0)
+    denda         = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="denda",
+                    title="Denda",
+                    default=0)
+    bunga         = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="bunga",
+                    title="Bunga",
+                    default=0)
+    kompensasi    = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="kompensasi",
+                    title="Kompensasi",
+                    default=0)
+    kenaikan    = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="kenaikan",
+                    title="Kenaikan",
+                    default=0)
+    jml_terhutang = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    missing=colander.drop,
+                    oid="jml_terhutang",
+                    title="Terhutang")
+                    
+    status        = colander.SchemaNode(
                     colander.Integer(),
                     widget=deferred_status)
+    
+    no_bayar      = colander.SchemaNode(
+                    colander.String(),
+                    oid="no_bayar",
+                    title="No.Bayar")
+    tgl_bayar     = colander.SchemaNode(
+                    colander.Date(),
+                    oid="tgl_bayar",
+                    title="Tanggal")
 
+                    # reklame_id    = colander.SchemaNode(
+                    # colander.Integer(),
+                    # oid="reklame_id",
+                    # missing=colander.drop)
+    # kode_reklame  = colander.SchemaNode(
+                    # colander.String(),
+                    # missing=colander.drop,
+                    # oid="kode_reklame",
+                    # title="NOPR",)
+    # reklame_nm    = colander.SchemaNode(
+                    # colander.String(),
+                    # missing=colander.drop,
+                    # oid="reklame_nm",
+                    # title="Objek.Pajak",)
+    
+    # pemilik_id    = colander.SchemaNode(
+                    # colander.Integer(),
+                    # oid="pemilik_id",
+                    # missing=colander.drop)
+
+    rekening_id   = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="rekening_id",
+                    missing=colander.drop)
+    rekening_nm   = colander.SchemaNode(
+                    colander.String(),
+                    oid="rekening_nm",
+                    title="Rekening",
+                    missing=colander.drop,
+                    )
+
+    # lahan_id      = colander.SchemaNode(
+                    # colander.Integer(),
+                    # oid="lahan",
+                    # title="Lahan",
+                    # widget=deferred_lahan)
+    # bersinar      = colander.SchemaNode(
+                    # colander.Integer(),
+                    # oid="bersinar",
+                    # title="Bersinar",
+                    # widget=deferred_bersinar)
+    # menempel      = colander.SchemaNode(
+                    # colander.Integer(),
+                    # oid="menempel",
+                    # title="Menempel",
+                    # widget=deferred_menempel)
+    # dalam_ruang   = colander.SchemaNode(
+                    # colander.Integer(),
+                    # oid="dalam_ruang",
+                    # title="Dlm Ruang",
+                    # widget=deferred_druang)
+    #nopd          = colander.SchemaNode(
+    #                colander.String(),
+    #                #missing=colander.drop,
+    #                oid="nopd",
+    #                title="NOPD",)
 class EditSchema(AddSchema):
     id = colander.SchemaNode(
                    colander.Integer(),
@@ -329,17 +550,22 @@ class EditSchema(AddSchema):
                     
 def get_form(request, class_form):
     schema = class_form(validator=form_validator)
-    schema = schema.bind(daftar_status=STATUS)
+    schema = schema.bind(daftar_status=STATUS,
+                         #daftar_lahan=IS_LAHAN,
+                         #daftar_bersinar=IS_BERSINAR,
+                         #daftar_menempel=IS_MENEMPEL,
+                         #daftar_druang=IS_DRUANG,
+                         )
     schema.request = request
     return Form(schema, buttons=('save','cancel'))
 
 def save_request2(row1=None):
-    row1 = OPreklame()
+    row1 = Reklame()
     return row1
     
 def save(values, user, row=None):
     if not row:
-        row = TransaksiPajak()
+        row = Transaksi()
         row.create_uid = user.id
         row.created    = datetime.now()
     else:
@@ -347,26 +573,17 @@ def save(values, user, row=None):
         row.updated    = datetime.now()
     
     row.from_dict(values) 
-
-    if not row.jumlah_byr:
-        a = "%s" % row.nilai_pjk
-        b = "%s" % row.denda_pjk
-        d = int(a)
-        e = int(b)
-        c = d + e
-        row.jumlah_byr = c 
-        print '-------nilai-------',a
-        print '-------denda-------',b
-        print '-------jumlah------',c
-        
+    
+    if not row.kode:
+        a  = int(row.id_permohonan)
+        b  = row.no_permohonan
+        no = "00%d" % a
+        id = no[-3:] 
+        #no_permohonan + id_permohonan (007001001-001)
+        row.kode = "%s" % b + "-%s" % id        
+    
     DBSession.add(row)
     DBSession.flush()
-    
-    #Untuk update disabled pada Objek Pajak Reklame
-    a = row.op_reklame_id
-    row1 = DBSession.query(OPreklame).filter(OPreklame.id==a).first()   
-    row1.disabled=1
-    save_request2(row1)
     
     return row
     
@@ -394,6 +611,7 @@ def view_add(request):
             try:
                 c = form.validate(controls)
             except ValidationFailure, e:
+                request.session.flash(e.message, 'error')
                 return dict(form=form)				
                 return HTTPFound(location=request.route_url('reklame-transaksi-add'))
             save_request(dict(controls), request)
@@ -406,7 +624,7 @@ def view_add(request):
 # Edit #
 ########
 def query_id(request):
-    return DBSession.query(TransaksiPajak).filter_by(id=request.matchdict['id'])
+    return DBSession.query(Transaksi).filter_by(id=request.matchdict['id'])
     
 def id_not_found(request):    
     msg = 'Transaksi Pajak ID %s not found.' % request.matchdict['id']
@@ -432,7 +650,18 @@ def view_edit(request):
     elif SESS_EDIT_FAILED in request.session:
         return session_failed(request, SESS_EDIT_FAILED)
     values = row.to_dict()
-    values['op_reklame_nm'] = row and row.op_reklames.nama or ''
+    values['jenis_reklame_nm'] = row.jenis_reklames and row.jenis_reklames.nama or ''
+    #values['jenis_reklame_ni'] = row.jenis_reklames.njop.nilai or ''
+    values['ketinggian_nm'] = row.ketinggians and row.ketinggians.nama or ''
+    values['jenis_nssr_nm'] = row.jenis_nssr and row.jenis_nssr.nama or ''
+    values['jenis_nssr_kd'] = row.jenis_nssr and row.jenis_nssr.kode or ''
+    values['kelas_jalan_nm'] = row.kelas_jalans and row.kelas_jalans.nama or ''
+    values['kelas_jalan_kd'] = row.kelas_jalans and row.kelas_jalans.kode or ''
+    values['sudut_pandang_nm'] = row.sudut_pandangs and row.sudut_pandangs.nama or ''
+    values['sudut_pandang_kd'] = row.sudut_pandangs and row.sudut_pandangs.kode or ''
+    values['lokasi_pasang_nm'] = row.lokasi_pasangs and row.lokasi_pasangs.nama or ''
+    values['lokasi_pasang_kd'] = row.lokasi_pasangs and row.lokasi_pasangs.kode or ''
+    
     form.set_appstruct(values)
     return dict(form=form)
 

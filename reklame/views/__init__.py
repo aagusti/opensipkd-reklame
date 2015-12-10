@@ -22,14 +22,16 @@ from ..models import (
     User,
     )
 
-
 ########
 # Home #
 ########
-@view_config(route_name='home', renderer='templates/home.pt', permission='home')
+@view_config(route_name='home', renderer='templates/home.pt', permission='view')
 def view_home(request):
-    return dict(project='Pajak Reklame')
+    return dict(project='Titik Reklame')
 
+@view_config(route_name='home-auth', renderer='templates/home.pt', permission='view')
+def view_home(request):
+    return dict(project='Titik Reklame')
 
 #########
 # Login #
@@ -40,7 +42,6 @@ class Login(colander.Schema):
     password = colander.SchemaNode(colander.String(),
                                    widget=widget.PasswordWidget(),
                                    oid='password')
-
 
 # http://deformdemo.repoze.org/interfield/
 def login_validator(form, value):
@@ -78,7 +79,7 @@ def view_login(request):
             #request.session['login failed'] = e.render()
             return HTTPFound(location=request.route_url('login'))
         headers = get_login_headers(request, user)        
-        return HTTPFound(location=request.route_url('reklame'),
+        return HTTPFound(location=request.route_url('home'),
                           headers=headers)
     elif 'login failed' in request.session:
         r = dict(form=request.session['login failed'])
@@ -93,7 +94,6 @@ def view_logout(request):
     return HTTPFound(location = request.route_url('home'),
                       headers = headers)    
 
-
 ###################
 # Change password #
 ###################
@@ -107,17 +107,15 @@ class Password(colander.Schema):
     retype_password = colander.SchemaNode(colander.String(),
                                        title="Ketik Ulang Kata Sandi",
                                        widget=widget.PasswordWidget())
-
                                           
 def password_validator(form, value):
     if not form.request.user.check_password(value['old_password']):
         raise colander.Invalid(form, 'Invalid old password.')
     if value['new_password'] != value['retype_password']:
         raise colander.Invalid(form, 'Retype mismatch.')
-                                          
 
 @view_config(route_name='password', renderer='templates/password.pt',
-             permission='password')
+             permission='view')
 def view_password(request):
     schema = Password(validator=password_validator)
     form = Form(schema, buttons=('simpan','batal'))

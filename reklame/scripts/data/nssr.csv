@@ -1,0 +1,47 @@
+id,kode,nama,nilai,status,luas_min,luas_max,jenis_nssr_id
+1,"101","TP Pemda / Jalan Tol / Shelter < 1",125000,1,0,1,1
+2,"102","TP Pemda / Jalan Tol / Shelter 1-2",250000,1,1,2,1
+3,"103","TP Pemda / Jalan Tol / Shelter 2-4",500000,1,2,4,1
+4,"104","TP Pemda / Jalan Tol / Shelter 4-10",1250000,1,4,10,1
+5,"105","TP Pemda / Jalan Tol / Shelter 10-16",2500000,1,10,16,1
+6,"106","TP Pemda / Jalan Tol / Shelter 16-24",4500000,1,16,24,1
+7,"107","TP Pemda / Jalan Tol / Shelter 24-50",6000000,1,24,50,1
+8,"108","TP Pemda / Jalan Tol / Shelter > 50",7500000,1,50,1000,1
+9,"201","TP Swasta / Di Atas Bangunan < 1",62500,1,0,1,2
+10,"202","TP Swasta / Di Atas Bangunan 1-2",125000,1,1,2,2
+11,"203","TP Swasta / Di Atas Bangunan 2-4",250000,1,2,4,2
+12,"204","TP Swasta / Di Atas Bangunan 4-10",625000,1,4,10,2
+13,"205","TP Swasta / Di Atas Bangunan 10-16",1250000,1,10,16,2
+14,"206","TP Swasta / Di Atas Bangunan 16-24",2250000,1,16,24,2
+15,"207","TP Swasta / Di Atas Bangunan 24-50",3000000,1,24,50,2
+16,"208","TP Swasta / Di Atas Bangunan > 50",3750000,1,50,1000,2
+17,"301","MPBLR < 1",37500,1,0,1,3
+18,"302","MPBLR 1-2",75000,1,1,2,3
+19,"303","MPBLR 2-4",150000,1,2,4,3
+20,"304","MPBLR 4-10",375000,1,4,10,3
+21,"305","MPBLR 10-16",750000,1,10,16,3
+22,"306","MPBLR 16-24",1350000,1,16,24,3
+23,"307","MPBLR 24-50",1800000,1,24,50,3
+24,"308","MPBLR > 50",2250000,1,50,1000,3
+25,"401","MPBDR < 1",15625,1,0,1,2,4
+26,"402","MPBDR 1-2",31250,1,1,2,2,4
+27,"403","MPBDR 2-4",62500,1,2,4,4
+28,"404","MPBDR 4-10",156250,1,4,10,4
+29,"405","MPBDR 10-16",312500,1,10,16,4
+30,"406","MPBDR 16-24",562500,1,16,24,4
+31,"407","MPBDR 24-50",750000,1,24,50,4
+32,"408","MPBDR > 50",937500,1,50,1000,4
+33,"501","Megatron / Videotron / Bando / LED / Dinamics Wall / Video Wall",7500000,1,0,1000,5
+34,"502","Berjalan Lebih 4 Roda",1000000,1,0,1000,5
+35,"503","Berjalan Roda 4",750000,1,0,1000,5
+36,"504","Berjalan Roda 2 / Roda 3",250000,1,0,1000,5
+37,"505","Rombong",1000000,1,0,1000,5
+38,"506","Painting Wall / Branding Wall",1000000,1,0,1000,5
+39,"507","Baligho / Banner",25000,1,0,1000,5
+40,"508","Spanduk / Umbul-Umbul",1500,1,0,1000,5
+41,"509","Poster / Tempelan (>A3)",750,1,0,1000,5
+42,"510","Selebaran / Brosur (<=A3)",250,1,0,1000,5
+43,"511","Balon Udara",500000,1,0,1000,5
+44,"512","Film / Slide",50000,1,0,1000,5
+45,"513","Peragaan",50000,1,0,1000,5
+46,"514","JPO / Fly Over",7500000,1,0,1000,5

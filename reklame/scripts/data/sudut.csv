@@ -1,0 +1,13 @@
+id,kode,nama,nilai,disabled
+1,"001",">3 Arah",2,0
+2,"002","3 Arah",1.2,0
+3,"003","2 Arah",0.6,0
+4,"004","1 Arah",0.2,0
+5,"005","MPBDR",0.2,0
+6,"006","Berjalan",2,0
+7,"007","Painting Wall / Branding Wall",0.6,0
+8,"008","Spanduk / Umbul-umbul",0.6,0
+9,"009","Selebaran / Poster / Brosur",0.6,0
+10,"010","Film / Slide",0.2,0
+11,"011","Leaflet",0.6,0
+12,"012","Balon Udara",2,0

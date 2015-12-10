@@ -1,0 +1,55 @@
+id,kode,nama,nilai,status,luas_min,luas_max,jenis_reklame_id
+1,"101","Tiang Pancang Bersinar < 2",500000,1,0,2,1
+2,"102","Tiang Pancang Bersinar 2-12",800000,1,2,12,1
+3,"103","Tiang Pancang Bersinar 12-24",1000000,1,12,24,1
+4,"104","Tiang Pancang Bersinar 24-36",1250000,1,24,36,1
+5,"105","Tiang Pancang Bersinar 36-50",1500000,1,36,50,1
+6,"106","Tiang Pancang Bersinar 50-60",2000000,1,50,60,1
+7,"107","Tiang Pancang Bersinar 60-100",2500000,1,60,100,1
+8,"108","Tiang Pancang Bersinar > 100",3000000,1,100,1000,1
+9,"201","Tiang Pancang Tidak Bersinar < 2",350000,1,0,2,1
+10,"202","Tiang Pancang Tidak Bersinar 2-12",560000,1,2,12,1
+11,"203","Tiang Pancang Tidak Bersinar 12-24",700000,1,12,24,1
+12,"204","Tiang Pancang Tidak Bersinar 24-36",875000,1,24,36,1
+13,"205","Tiang Pancang Tidak Bersinar 36-50",1050000,1,36,50,1
+14,"206","Tiang Pancang Tidak Bersinar 50-60",1400000,1,50,60,1
+15,"207","Tiang Pancang Tidak Bersinar 60-100",1750000,1,60,100,1
+16,"208","Tiang Pancang Tidak Bersinar > 100",2100000,1,100,1000,1
+17,"301","JPO / Fly Over < 2",350000,1,0,2,2
+18,"302","JPO / Fly Over 2-12",650000,1,2,12,2
+19,"303","JPO / Fly Over 12-24",850000,1,12,24,2
+20,"304","JPO / Fly Over 24-36",1000000,1,24,36,2
+21,"305","JPO / Fly Over 36-50",1250000,1,36,50,2
+22,"306","JPO / Fly Over 50-60",1750000,1,50,60,2
+23,"307","JPO / Fly Over 60-100",2500000,1,60,100,2
+24,"308","JPO / Fly Over > 100",2750000,1,100,1000,2
+25,"401","Menempel Bersinar < 2",325000,1,0,2,3
+26,"402","Menempel Bersinar 2-12",350000,1,2,12,3
+27,"403","Menempel Bersinar 12-24",400000,1,12,24,3
+28,"404","Menempel Bersinar 24-36",450000,1,24,36,3
+29,"405","Menempel Bersinar 36-50",500000,1,36,50,3
+30,"406","Menempel Bersinar 50-60",550000,1,50,60,3
+31,"407","Menempel Bersinar 60-100",650000,1,60,100,3
+32,"408","Menempel Bersinar > 100",700000,1,100,1000,3
+33,"501","Menempel Tidak Bersinar < 2",200000,1,0,2,4
+34,"502","Menempel Tidak Bersinar 2-12",225000,1,2,12,4
+35,"503","Menempel Tidak Bersinar 12-24",275000,1,12,24,4
+36,"504","Menempel Tidak Bersinar 24-36",300000,1,24,36,4
+37,"505","Menempel Tidak Bersinar 36-50",325000,1,36,50,4
+38,"506","Menempel Tidak Bersinar 50-60",350000,1,50,60,4
+39,"507","Menempel Tidak Bersinar 60-100",400000,1,60,100,4
+40,"508","Menempel Tidak Bersinar > 100",452000,1,100,1000,4
+41,"601","Megatron / Videotron / dll (/m2)",5000000,1,0,1000,5
+42,"602","Bando (/m2)",3000000,1,0,1000,6
+43,"603","Berjalan Lebih 4 Roda (/Unit)",1500000,1,0,1000,7
+44,"604","Berjalan Roda 4 (/Unit)",1000000,1,0,1000,8
+45,"605","Berjalan Roda 2 / Roda 3 (/Unit)",500000,1,0,1000,9
+46,"606","Rombong (/Unit)",2000000,1,0,1000,10
+47,"607","Painting Wall / Branding Wall (/Unit)",2000000,1,0,1000,11
+48,"608","Baligho / Banner (/m2)",15000,1,0,1000,12
+49,"609","Spanduk / Umbul-Umbul (/m2)",5000,1,0,1000,13
+50,"610","Poster / Tempelan >A3 (/Lembar)",350,1,0,1000,14
+51,"611","Selebaran / Brosur <=A3 (/Lembar)",200,1,0,1000,15
+52,"612","Balon Udara (/Unit)",500000,1,0,1000,16
+53,"613","Film / Slide (/Unit)",50000,1,0,1000,17
+54,"614","Peragaan (/Unit)",50000,1,0,1000,18

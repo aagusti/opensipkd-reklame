@@ -16,19 +16,19 @@ from ...models import(
     DBSession,
     )
 from ...models.reklame import (
-    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Ketinggian, Nsr, Rekening, OPreklame, TransaksiPajak
+    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Ketinggian, Jenis, Rekening, Reklame, Transaksi
     )
 from datatables import ColumnDT, DataTables
 from datetime import datetime
-from ...tools import create_now
+from ...tools import create_now,_DTnumberformat
 
-SESS_ADD_FAILED = 'NSR add failed'
-SESS_EDIT_FAILED = 'NSR edit failed'
+SESS_ADD_FAILED = 'Jenis add failed'
+SESS_EDIT_FAILED = 'Jenis edit failed'
 
 ########                    
 # List #
 ########    
-@view_config(route_name='reklame-nsr', renderer='templates/nsr/list.pt',
+@view_config(route_name='reklame-nsr', renderer='templates/jenis/list.pt',
              permission='reklame-nsr')
 def view_list(request):
     return dict(project='Pajak Reklame')
@@ -37,8 +37,8 @@ def view_list(request):
 # Action #
 ##########    
 @view_config(route_name='reklame-nsr-act', renderer='json',
-             permission='reklame-nsr-act')
-def nsr_act(request):
+             permission='reklame-nsr')
+def jenis_act(request):
     ses = request.session
     req = request
     params = req.params
@@ -50,11 +50,11 @@ def nsr_act(request):
         columns.append(ColumnDT('kode'))
         columns.append(ColumnDT('nama'))
         columns.append(ColumnDT('rekenings.nama'))
-        columns.append(ColumnDT('nilai'))
-        columns.append(ColumnDT('disabled'))
+        columns.append(ColumnDT('nilai', filter=_DTnumberformat))
+        columns.append(ColumnDT('status'))
         
-        query = DBSession.query(Nsr)
-        rowTable = DataTables(req, Nsr, query, columns)
+        query = DBSession.query(Jenis)
+        rowTable = DataTables(req, Jenis, query, columns)
         return rowTable.output_result()
     
     elif url_dict['act']=='grid1':
@@ -64,26 +64,26 @@ def nsr_act(request):
         columns.append(ColumnDT('kode'))
         columns.append(ColumnDT('nama'))
         columns.append(ColumnDT('rekenings.nama'))
-        columns.append(ColumnDT('nilai'))
-        columns.append(ColumnDT('disabled'))
+        columns.append(ColumnDT('nilai', filter=_DTnumberformat))
+        columns.append(ColumnDT('status'))
         
-        query = DBSession.query(Nsr
+        query = DBSession.query(Jenis
                         ).join(Rekening
-                        ).filter(Nsr.rekening_id == Rekening.id,
+                        ).filter(Jenis.rekening_id == Rekening.id,
                                  or_(Rekening.nama.ilike('%%%s%%' % cari),
-                                     Nsr.kode.ilike('%%%s%%' % cari),
-                                     Nsr.nama.ilike('%%%s%%' % cari))
+                                     Jenis.kode.ilike('%%%s%%' % cari),
+                                     Jenis.nama.ilike('%%%s%%' % cari))
                         )
-        rowTable = DataTables(req, Nsr, query, columns)
+        rowTable = DataTables(req, Jenis, query, columns)
         return rowTable.output_result()
         
     elif url_dict['act']=='hon_nsr':
         term = 'term' in params and params['term'] or '' 
-        rows = DBSession.query(Nsr.id, 
-                               Nsr.kode, 
-                               Nsr.nama,
-                               Nsr.nilai,
-                       ).filter(Nsr.nama.ilike('%%%s%%' % term) 
+        rows = DBSession.query(Jenis.id, 
+                               Jenis.kode, 
+                               Jenis.nama,
+                               Jenis.nilai,
+                       ).filter(Jenis.nama.ilike('%%%s%%' % term) 
                        ).all()
         r = []
         for k in rows:
@@ -98,11 +98,11 @@ def nsr_act(request):
            
     elif url_dict['act']=='hok_nsr':
         term = 'term' in params and params['term'] or '' 
-        rows = DBSession.query(Nsr.id, 
-                               Nsr.kode, 
-                               Nsr.nama,
-                               Nsr.nilai,
-                       ).filter(Nsr.kode.ilike('%%%s%%' % term) 
+        rows = DBSession.query(Jenis.id, 
+                               Jenis.kode, 
+                               Jenis.nama,
+                               Jenis.nilai,
+                       ).filter(Jenis.kode.ilike('%%%s%%' % term) 
                        ).all()
         r = []
         for k in rows:
@@ -118,14 +118,14 @@ def nsr_act(request):
     elif url_dict['act']=='hon_nsr_op':
         term = 'term' in params and params['term'] or ''
         rek_id = 'rek_id' in params and params['rek_id'] or 0        
-        rows = DBSession.query(Nsr.id, 
-                               Nsr.kode, 
-                               Nsr.nama,
-                               Nsr.nilai,
+        rows = DBSession.query(Jenis.id, 
+                               Jenis.kode, 
+                               Jenis.nama,
+                               Jenis.nilai,
                                Rekening.nama
-                       ).filter(Nsr.rekening_id == Rekening.id, 
+                       ).filter(Jenis.rekening_id == Rekening.id, 
                                 Rekening.id == rek_id,
-                                Nsr.nama.ilike('%%%s%%' % term) 
+                                Jenis.nama.ilike('%%%s%%' % term) 
                        ).all()
         r = []
         for k in rows:
@@ -136,6 +136,30 @@ def nsr_act(request):
             d['nama']    = k[2]
             d['nilai']   = k[3]
             d['rek']     = k[4]
+            r.append(d)
+        return r    
+        
+    elif url_dict['act']=='hon_jenis_op':
+        term = 'term' in params and params['term'] or ''     
+        rows = DBSession.query(Jenis.id, 
+                               Jenis.kode, 
+                               Jenis.nama,
+                               Jenis.nilai,
+                               Jenis.rekening_id,
+                               Rekening.nama
+                       ).filter(Jenis.rekening_id == Rekening.id,
+                                Jenis.nama.ilike('%%%s%%' % term) 
+                       ).all()
+        r = []
+        for k in rows:
+            d={}
+            d['id']      = k[0]
+            d['value']   = k[2]
+            d['kode']    = k[1]
+            d['nama']    = k[2]
+            d['nilai']   = k[3]
+            d['rek_id']  = k[4]
+            d['rek_nm']  = k[5]
             r.append(d)
         return r      
     
@@ -154,12 +178,12 @@ def form_validator(form, value):
                 
     if 'id' in form.request.matchdict:
         uid = form.request.matchdict['id']
-        q = DBSession.query(Nsr).filter_by(id=uid)
+        q = DBSession.query(Jenis).filter_by(id=uid)
         nsr = q.first()
     else:
         nsr = None
         
-    q = DBSession.query(Nsr).filter_by(kode=value['kode'])
+    q = DBSession.query(Jenis).filter_by(kode=value['kode'])
     found = q.first()
     if nsr:
         if found and found.id != nsr.id:
@@ -168,7 +192,7 @@ def form_validator(form, value):
         err_kode()
         
     if 'nama' in value: # optional
-        found = Nsr.get_by_nama(value['nama'])
+        found = Jenis.get_by_nama(value['nama'])
         if nsr:
             if found and found.id != nsr.id:
                 err_nama()
@@ -204,12 +228,12 @@ class AddSchema(colander.Schema):
                       oid="rekening_nm",
                       title="Rekening",)
     nilai           = colander.SchemaNode(
-                      colander.Float(),
+                      colander.Integer(),
                       default = 0,
                       #missing=colander.drop,
                       oid = "nilai",
                       title = "Nilai")
-    disabled        = colander.SchemaNode(
+    status        = colander.SchemaNode(
                       colander.Integer(),
                       widget=deferred_status)
 
@@ -231,7 +255,7 @@ def save_request1(row1=None):
     
 def save(values, user, row=None):
     if not row:
-        row = Nsr()
+        row = Jenis()
         row.create_uid = user.id
         row.created    = datetime.now()
     else:
@@ -242,19 +266,13 @@ def save(values, user, row=None):
     DBSession.add(row)
     DBSession.flush()
     
-    #Untuk update disabled pada Rekening
-    a = row.rekening_id
-    row1 = DBSession.query(Rekening).filter(Rekening.id==a).first()   
-    row1.disabled=1
-    save_request1(row1)
-    
     return row
     
 def save_request(values, request, row=None):
     if 'id' in request.matchdict:
         values['id'] = request.matchdict['id']
     row = save(values, request.user, row)
-    request.session.flash('NSR %s sudah disimpan.' % row.nama)
+    request.session.flash('Jenis reklame %s sudah disimpan.' % row.nama)
         
 def route_list(request):
     return HTTPFound(location=request.route_url('reklame-nsr'))
@@ -264,7 +282,7 @@ def session_failed(request, session_name):
     del request.session[session_name]
     return r
     
-@view_config(route_name='reklame-nsr-add', renderer='templates/nsr/add.pt',
+@view_config(route_name='reklame-nsr-add', renderer='templates/jenis/add.pt',
              permission='reklame-nsr-add')
 def view_add(request):
     form = get_form(request, AddSchema)
@@ -286,14 +304,14 @@ def view_add(request):
 # Edit #
 ########
 def query_id(request):
-    return DBSession.query(Nsr).filter_by(id=request.matchdict['id'])
+    return DBSession.query(Jenis).filter_by(id=request.matchdict['id'])
     
 def id_not_found(request):    
-    msg = 'NSR ID %s not found.' % request.matchdict['id']
+    msg = 'Jenis reklame ID %s not found.' % request.matchdict['id']
     request.session.flash(msg, 'error')
     return route_list(request)
 
-@view_config(route_name='reklame-nsr-edit', renderer='templates/nsr/edit.pt',
+@view_config(route_name='reklame-nsr-edit', renderer='templates/jenis/edit.pt',
              permission='reklame-nsr-edit')
 def view_edit(request):
     row = query_id(request).first()
@@ -320,7 +338,7 @@ def view_edit(request):
 ##########
 # Delete #
 ##########    
-@view_config(route_name='reklame-nsr-delete', renderer='templates/nsr/delete.pt',
+@view_config(route_name='reklame-nsr-delete', renderer='templates/jenis/delete.pt',
              permission='reklame-nsr-delete')
 def view_delete(request):
     q = query_id(request)
@@ -330,7 +348,7 @@ def view_delete(request):
     if not row:
         return id_not_found(request)
         
-    a = DBSession.query(OPreklame).filter(OPreklame.rek_nsr_id==uid).first()
+    a = DBSession.query(Reklame).filter(Reklame.jenis_id==uid).first()
     if a:
         request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Objek Pajak.', 'error')
         return route_list(request)
@@ -338,7 +356,7 @@ def view_delete(request):
     form = Form(colander.Schema(), buttons=('hapus','batal'))
     if request.POST:
         if 'hapus' in request.POST:
-            msg = 'NSR ID %d %s sudah dihapus.' % (row.id, row.nama)
+            msg = 'Jenis reklame ID %d %s sudah dihapus.' % (row.id, row.nama)
             q.delete()
             DBSession.flush()
             request.session.flash(msg)

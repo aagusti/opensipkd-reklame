@@ -11,8 +11,7 @@
             <th>Nama</th>
             <th>Alamat</th>
             <th>No. Telp</th>
-            <th>No. Fax</th>
-            <th>No. HP</th>
+            <th>Mobile</th>
             <th>In-aktif</th>
         </tr>
     </thead>
@@ -66,12 +65,12 @@
               "aTargets"   : [0]
           },{
               "bSearchable": true,
-              "aTargets"   : [2,3,4,6]
+              "aTargets"   : [1,2,3,4,5]
           },{
               "bSortable"  : false,
-              "aTargets"   : [2,3,4,5,6]
+              "aTargets"   : [2,3,4,5]
           },{
-              "aTargets"   : [7], // Column number which needs to be modified
+              "aTargets"   : [6], // Column number which needs to be modified
               "mRender"    : function (data, type, full) {
                   if (data == "0") {
                       return 'N';
@@ -83,13 +82,12 @@
 		  ],
           "aoColumns": [
               null,
-              {"width": "90px"},
+              {"width": "50px"},
               {"width": "150px"},
-              {"width": "200px"},
-              {"width": "70px"},
-              {"width": "70px"},
-              {"width": "70px"},
-              {"width": "50px", "sClass": "center"},
+              {"width": "250px"},
+              {"width": "50px"},
+              {"width": "50px"},
+              {"width": "30px", "sClass": "center"},
           ]
         });
           

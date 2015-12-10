@@ -16,11 +16,11 @@ from ...models import(
     DBSession,
     )
 from ...models.reklame import (
-    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Rekening, Nsr, Ketinggian, OPreklame, TransaksiPajak
+    Kecamatan, Kelurahan, KelasJalan, Jalan, Sudut, Lokasi, Pemilik, Rekening, Jenis, Ketinggian, Reklame, Transaksi
     )
 from datatables import ColumnDT, DataTables
 from datetime import datetime
-from ...tools import create_now
+from ...tools import create_now,_DTnumberformat
 
 SESS_ADD_FAILED = 'Objek Pajak add failed'
 SESS_EDIT_FAILED = 'Objek Pajak edit failed'
@@ -52,12 +52,12 @@ def opreklame_act(request):
         columns.append(ColumnDT('rekenings.nama'))
         columns.append(ColumnDT('kelurahans.nama'))
         columns.append(ColumnDT('jalans.nama'))
-        columns.append(ColumnDT('rek_nsr.nilai'))
-        columns.append(ColumnDT('jumlah'))
+        columns.append(ColumnDT('jenis.nilai', filter=_DTnumberformat))
+        columns.append(ColumnDT('jumlah_titik'))
         columns.append(ColumnDT('disabled'))
         
-        query = DBSession.query(OPreklame)
-        rowTable = DataTables(req, OPreklame, query, columns)
+        query = DBSession.query(Reklame)
+        rowTable = DataTables(req, Reklame, query, columns)
         return rowTable.output_result()
     
     elif url_dict['act']=='grid1':
@@ -69,35 +69,61 @@ def opreklame_act(request):
         columns.append(ColumnDT('rekenings.nama'))
         columns.append(ColumnDT('kelurahans.nama'))
         columns.append(ColumnDT('jalans.nama'))
-        columns.append(ColumnDT('rek_nsr.nilai'))
-        columns.append(ColumnDT('jumlah'))
+        columns.append(ColumnDT('jenis.nilai', filter=_DTnumberformat))
+        columns.append(ColumnDT('jumlah_titik'))
         columns.append(ColumnDT('disabled'))
         
-        query = DBSession.query(OPreklame
+        query = DBSession.query(Reklame
                         ).join(Kelurahan, Jalan, Rekening, Pemilik
-                        ).filter(OPreklame.pemilik_id    == Pemilik.id,
-                                 OPreklame.rekening_id   == Rekening.id,
-                                 OPreklame.rek_nsr_id    == Nsr.id,
-                                 OPreklame.kelurahan_id  == Kelurahan.id,
-                                 OPreklame.jalan_id      == Jalan.id,
-                                 OPreklame.ketinggian_id == Ketinggian.id,
-                                 or_(OPreklame.kode.ilike('%%%s%%' % cari),
-                                     OPreklame.nama.ilike('%%%s%%' % cari),
+                        ).filter(Reklame.pemilik_id    == Pemilik.id,
+                                 Reklame.rekening_id   == Rekening.id,
+                                 Reklame.jenis_id      == Jenis.id,
+                                 Reklame.kelurahan_id  == Kelurahan.id,
+                                 Reklame.jalan_id      == Jalan.id,
+                                 or_(Reklame.kode.ilike('%%%s%%' % cari),
+                                     Reklame.nama.ilike('%%%s%%' % cari),
                                      Rekening.nama.ilike('%%%s%%' % cari),
                                      Kelurahan.nama.ilike('%%%s%%' % cari),
                                      Jalan.nama.ilike('%%%s%%' % cari),
                                      )
                         )
-        rowTable = DataTables(req, OPreklame, query, columns)
+        rowTable = DataTables(req, Reklame, query, columns)
         return rowTable.output_result()
         
     elif url_dict['act']=='hon_op':
         term = 'term' in params and params['term'] or '' 
-        rows = DBSession.query(OPreklame.id, 
-                               OPreklame.kode, 
-                               OPreklame.nama, 
-                               OPreklame.jumlah
-                       ).filter(OPreklame.nama.ilike('%%%s%%' % term) 
+        rows = DBSession.query(Reklame.id,           # 0
+                               Reklame.kode,         # 1
+                               Reklame.nama,         # 2
+                               Reklame.jumlah_titik, # 3
+                               Reklame.rekening_id,  # 4
+                               Rekening.nama,        # 5
+                               Reklame.jenis_id,     # 6
+                               Jenis.nama,           # 7
+                               Jenis.nilai,          # 8
+                               Reklame.sudut_id,     # 9
+                               Sudut.kode,           # 10
+                               Sudut.nama,           # 11
+                               Reklame.panjang,      # 12
+                               Reklame.lebar,        # 13
+                               Reklame.luas,         # 14
+                               Reklame.tinggi,       # 15
+                               Reklame.muka,         # 16
+                               Reklame.lahan_id,     # 17
+                               Reklame.bersinar,     # 18
+                               Reklame.menempel,     # 19
+                               Reklame.dalam_ruang,  # 20
+                               Reklame.lokasi_id,    # 21
+                               Lokasi.kode,          # 22
+                               Lokasi.nama,          # 23
+                               Reklame.pemilik_id,   # 24
+                       ).join(Rekening, Jenis, Sudut, Lokasi, Pemilik
+                       ).filter(Reklame.rekening_id == Rekening.id,
+                                Reklame.jenis_id    == Jenis.id,
+                                Reklame.sudut_id    == Sudut.id,
+                                Reklame.lokasi_id   == Lokasi.id,
+                                Reklame.pemilik_id  == Pemilik.id,
+                                Reklame.nama.ilike('%%%s%%' % term) 
                        ).all()
         r = []
         for k in rows:
@@ -107,16 +133,40 @@ def opreklame_act(request):
             d['kode']    = k[1]
             d['nama']    = k[2]
             d['jml']     = k[3]
+            # --------------- #
+            d['rek_id']  = k[4]
+            d['rek_nm']  = k[5]
+            d['jen_id']  = k[6]
+            d['jen_nm']  = k[7]
+            d['jen_ni']  = k[8]
+            d['sud_id']  = k[9]
+            d['sud_kd']  = k[10]
+            d['sud_nm']  = k[11]
+            d['lok_id']  = k[21]
+            d['lok_kd']  = k[22]
+            d['lok_nm']  = k[23]
+            d['pem_id']  = k[24]
+            # ---------------- #
+            d['panjang'] = k[12]
+            d['lebar']   = k[13]
+            d['luas']    = k[14]
+            d['tinggi']  = k[15]
+            d['muka']    = k[16]
+            d['lahan']   = k[17]
+            d['sinar']   = k[18]
+            d['nempel']  = k[19]
+            d['druang']  = k[20]
+            
             r.append(d)
         return r   
            
     elif url_dict['act']=='hok_op':
         term = 'term' in params and params['term'] or '' 
-        rows = DBSession.query(OPreklame.id, 
-                               OPreklame.kode, 
-                               OPreklame.nama, 
-                               OPreklame.jumlah
-                       ).filter(OPreklame.kode.ilike('%%%s%%' % term) 
+        rows = DBSession.query(Reklame.id, 
+                               Reklame.kode, 
+                               Reklame.nama, 
+                               Reklame.jumlah_titik
+                       ).filter(Reklame.kode.ilike('%%%s%%' % term) 
                        ).all()
         r = []
         for k in rows:
@@ -145,12 +195,12 @@ def form_validator(form, value):
                 
     if 'id' in form.request.matchdict:
         uid = form.request.matchdict['id']
-        q = DBSession.query(OPreklame).filter_by(id=uid)
+        q = DBSession.query(Reklame).filter_by(id=uid)
         opreklame = q.first()
     else:
         opreklame = None
         
-    #q = DBSession.query(OPreklame).filter_by(kode=value['kode'])
+    #q = DBSession.query(Reklame).filter_by(kode=value['kode'])
     #found = q.first()
     #if opreklame:
     #    if found and found.id != opreklame.id:
@@ -159,7 +209,7 @@ def form_validator(form, value):
     #    err_kode()
         
     if 'nama' in value: # optional
-        found = OPreklame.get_by_nama(value['nama'])
+        found = Reklame.get_by_nama(value['nama'])
         if opreklame:
             if found and found.id != opreklame.id:
                 err_nama()
@@ -176,6 +226,7 @@ STATUS = (
     (1, 'Active'),
     )     
 
+# Untuk pilihan Sudut Pandang Reklame    
 @colander.deferred    
 def deferred_sudut(node, kw):
     values = kw.get('is_sudut', [])
@@ -190,6 +241,51 @@ IS_SUDUT = (
     ('Berjalan/Kendaraan', 'Berjalan/Kendaraan'),
     ('Indoor', 'Indoor'),
     )
+    
+# Untuk pilihan Bersinar
+@colander.deferred
+def deferred_bersinar(node, kw):
+    values = kw.get('daftar_bersinar', [])
+    return widget.SelectWidget(values=values)
+    
+IS_BERSINAR = (
+    (0, 'Tidak'),
+    (1, 'Ya'),
+    )     
+    
+# Untuk pilihan Menempel
+@colander.deferred
+def deferred_menempel(node, kw):
+    values = kw.get('daftar_menempel', [])
+    return widget.SelectWidget(values=values)
+    
+IS_MENEMPEL = (
+    (0, 'Tidak'),
+    (1, 'Ya'),
+    )
+    
+# Untuk pilihan Dalam Ruang
+@colander.deferred
+def deferred_druang(node, kw):
+    values = kw.get('daftar_druang', [])
+    return widget.SelectWidget(values=values)
+    
+IS_DRUANG = (
+    (0, 'Tidak'),
+    (1, 'Ya'),
+    )     
+    
+# Untuk pilihan Lahan
+@colander.deferred
+def deferred_lahan(node, kw):
+    values = kw.get('daftar_lahan', [])
+    return widget.SelectWidget(values=values)
+    
+IS_LAHAN = (
+    (1, 'Pemda'),
+    (2, 'Swasta'),
+    )     
+
 
 class AddSchema(colander.Schema):
     kode          = colander.SchemaNode(
@@ -200,11 +296,16 @@ class AddSchema(colander.Schema):
     nama          = colander.SchemaNode(
                     colander.String(),
                     oid = "nama",
-                    title = "Uraian",)
+                    title = "Keterangan",)
     pemilik_id    = colander.SchemaNode(
                     colander.Integer(),
                     oid="pemilik_id",
                     missing=colander.drop)
+    pemilik_kd    = colander.SchemaNode(
+                    colander.String(),
+                    missing=colander.drop,
+                    oid="pemilik_kd",
+                    title="Pemilik",)
     pemilik_nm    = colander.SchemaNode(
                     colander.String(),
                     #missing=colander.drop,
@@ -219,63 +320,82 @@ class AddSchema(colander.Schema):
                     #missing=colander.drop,
                     oid="rekening_nm",
                     title="Rekening",)
-    rek_nsr_id   = colander.SchemaNode(
+    lokasi_id     = colander.SchemaNode(
                     colander.Integer(),
-                    oid="rek_nsr_id",
+                    oid="lokasi_id",
                     missing=colander.drop)
-    rek_nsr_nm   = colander.SchemaNode(
+    lokasi_kd     = colander.SchemaNode(
+                    colander.String(),
+                    missing=colander.drop,
+                    oid="lokasi_kd",
+                    title="Lokasi",)
+    lokasi_nm     = colander.SchemaNode(
                     colander.String(),
                     #missing=colander.drop,
-                    oid="rek_nsr_nm",
-                    title="NSR",)
-    rek_nsr_ni   = colander.SchemaNode(
+                    oid="lokasi_nm",
+                    title="Lokasi",)
+    jenis_id      = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="jenis_id",
+                    missing=colander.drop)
+    jenis_nm      = colander.SchemaNode(
+                    colander.String(),
+                    #missing=colander.drop,
+                    oid="jenis_nm",
+                    title="Jenis",)
+    jenis_ni      = colander.SchemaNode(
                     colander.Float(),
                     #missing=colander.drop,
-                    oid="rek_nsr_ni",
+                    oid="jenis_ni",
                     title="Nilai",)
+    kecamatan_id  = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="kecamatan_id",
+                    missing=colander.drop)
+    kecamatan_kd  = colander.SchemaNode(
+                    colander.String(),
+                    missing=colander.drop,
+                    oid="kecamatan_kd",
+                    title="Kecamatan",)
+    kecamatan_nm  = colander.SchemaNode(
+                    colander.String(),
+                    #missing=colander.drop,
+                    oid="kecamatan_nm",
+                    title="Kecamatan",)
     kelurahan_id  = colander.SchemaNode(
                     colander.Integer(),
                     oid="kelurahan_id",
                     missing=colander.drop)
+    kelurahan_kd  = colander.SchemaNode(
+                    colander.String(),
+                    missing=colander.drop,
+                    oid="kelurahan_kd",
+                    title="Kelurahan",)
     kelurahan_nm  = colander.SchemaNode(
                     colander.String(),
                     #missing=colander.drop,
                     oid="kelurahan_nm",
                     description='pop up',
                     title="Kelurahan",)
-    kecamatan     = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="kecamatan",
-                    title="Kecamatan",)
-    kecamatan_id  = colander.SchemaNode(
-                    colander.Integer(),
-                    oid="kecamatan_id",
-                    missing=colander.drop)
-    kabupaten     = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="kabupaten",
-                    title="Kabupaten",)
-    provinsi      = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="provinsi",
-                    title="Provinsi",)
     jalan_id      = colander.SchemaNode(
                     colander.Integer(),
                     oid="jalan_id",
                     missing=colander.drop)
+    jalan_kd      = colander.SchemaNode(
+                    colander.String(),
+                    missing=colander.drop,
+                    oid="jalan_kd",
+                    title="Jalan",)
     jalan_nm      = colander.SchemaNode(
                     colander.String(),
                     #missing=colander.drop,
                     oid="jalan_nm",
                     title="Jalan",)
-    alamat        = colander.SchemaNode(
-                    colander.String(),
-                    missing=colander.drop,
-                    oid="alamat",
-                    title="Alamat",)
+    #alamat        = colander.SchemaNode(
+    #                colander.String(),
+    #                missing=colander.drop,
+    #                oid="alamat",
+    #                title="Alamat",)
     no_urut       = colander.SchemaNode(
                     colander.Integer(),
                     missing=colander.drop,
@@ -298,50 +418,70 @@ class AddSchema(colander.Schema):
                     missing=colander.drop,
                     oid="luas",
                     title="Luas")
+    tinggi        = colander.SchemaNode(
+                    colander.Integer(),
+                    #missing=colander.drop,
+                    oid="tinggi",
+                    title="Tinggi",
+                    default=1)
     muka          = colander.SchemaNode(
                     colander.Integer(),
                     #missing=colander.drop,
                     oid="muka",
                     title="Muka",
                     default=1)
-    sudut_pandang = colander.SchemaNode(
+    sudut_id      = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="sudut_id",
+                    missing=colander.drop)
+    sudut_kd      = colander.SchemaNode(
+                    colander.String(),
+                    missing=colander.drop,
+                    oid="sudut_kd",
+                    title="Sudut Pandang",)
+    sudut_nm      = colander.SchemaNode(
                     colander.String(),
                     #missing=colander.drop,
-                    oid="sudut_pandang",
-                    title="Sudut.Pandang",
-                    widget=deferred_sudut)
-    jumlah        = colander.SchemaNode(
+                    oid="sudut_nm",
+                    title="Sudut Pandang",)
+    jumlah_titik  = colander.SchemaNode(
                     colander.Integer(),
                     #missing=colander.drop,
-                    oid="jumlah",
+                    oid="jumlah_titik",
                     title="Jumlah",
                     default=1)
-    ketinggian_id = colander.SchemaNode(
-                    colander.Integer(),
-                    oid="ketinggian_id",
-                    missing=colander.drop)
-    ketinggian_nm = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid="ketinggian_nm",
-                    title="Ketinggian",)
-    ketinggian_ni = colander.SchemaNode(
-                    colander.Float(),
-                    #missing=colander.drop,
-                    oid="ketinggian_ni",
-                    title="Nilai",)
     koordinat_x   = colander.SchemaNode(
                     colander.Float(),
                     #missing=colander.drop,
                     oid="koordinat_x",
-                    title="Koordinat",
+                    title="Koordinat:X",
                     default=0)
     koordinat_y   = colander.SchemaNode(
                     colander.Float(),
                     #missing=colander.drop,
                     oid="koordinat_y",
-                    title="Koordinat Y",
+                    title="Y",
                     default=0)
+    lahan_id      = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="lahan",
+                    title="Lahan",
+                    widget=deferred_lahan)
+    bersinar      = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="bersinar",
+                    title="Bersinar",
+                    widget=deferred_bersinar)
+    menempel      = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="menempel",
+                    title="Menempel",
+                    widget=deferred_menempel)
+    dalam_ruang   = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="dalam_ruang",
+                    title="Dalam Ruang",
+                    widget=deferred_druang)
     disabled      = colander.SchemaNode(
                     colander.Integer(),
                     widget=deferred_status)
@@ -353,7 +493,11 @@ class EditSchema(AddSchema):
                     
 def get_form(request, class_form):
     schema = class_form(validator=form_validator)
-    schema = schema.bind(daftar_status=STATUS,is_sudut=IS_SUDUT)
+    schema = schema.bind(daftar_status=STATUS,
+                         daftar_lahan=IS_LAHAN,
+                         daftar_bersinar=IS_BERSINAR,
+                         daftar_menempel=IS_MENEMPEL,
+                         daftar_druang=IS_DRUANG,)
     schema.request = request
     return Form(schema, buttons=('save','cancel'))
 
@@ -374,18 +518,26 @@ def save_request4(row4=None):
     row4 = Jalan()
     return row4    
     
-def save_request5(row5=None):
-    row5 = Ketinggian()
-    return row5    
+#def save_request5(row5=None):
+#    row5 = Ketinggian()
+#    return row5    
     
 def save_request6(row6=None):
-    row6 = Nsr()
+    row6 = Jenis()
     return row6
+    
+def save_request7(row7=None):
+    row7 = Lokasi()
+    return row7    
+    
+def save_request8(row8=None):
+    row8 = Sudut()
+    return row8
 #------------------------------#    
     
 def save(values, user, row=None):
     if not row:
-        row = OPreklame()
+        row = Reklame()
         row.create_uid = user.id
         row.created    = datetime.now()
     else:
@@ -395,7 +547,7 @@ def save(values, user, row=None):
     row.from_dict(values) 
     
     if not row.no_urut:
-        row.no_urut = OPreklame.max_no_urut(row.kelurahan_id, row.jalan_id)+1;
+        row.no_urut = Reklame.max_no_urut(row.kelurahan_id, row.jalan_id)+1;
     
     if not row.kode:
         a = DBSession.query(Kelurahan.kode.label('kel'),
@@ -422,11 +574,15 @@ def save(values, user, row=None):
     if not row.luas:
         a = "%s" % row.panjang
         b = "%s" % row.lebar
-        c = float(a) * float(b) 
-        row.luas = c 
+        d = "%s" % row.muka
+        e = "%s" % row.jumlah_titik
+        c = float(a) * float(b) * float(d) * float(e)     
+        row.luas = c
         print '-------panjang-------',a
         print '--------lebar--------',b
         print '---------luas--------',c
+        print '---------muka--------',d
+        print '--------jumlah-------',e
         
     DBSession.add(row)
     DBSession.flush()
@@ -435,8 +591,10 @@ def save(values, user, row=None):
     b = row.rekening_id
     c = row.kelurahan_id
     d = row.jalan_id
-    e = row.ketinggian_id
-    f = row.rek_nsr_id
+    #e = row.ketinggian_id
+    f = row.jenis_id
+    g = row.lokasi_id
+    h = row.sudut_id
     
     #Untuk update disabled pada Pemilik
     row1 = DBSession.query(Pemilik).filter(Pemilik.id==a).first()   
@@ -459,14 +617,24 @@ def save(values, user, row=None):
     save_request4(row4)
     
     #Untuk update disabled pada Ketinggian
-    row5 = DBSession.query(Ketinggian).filter(Ketinggian.id==e).first()   
-    row5.disabled=1
-    save_request5(row5)
+    #row5 = DBSession.query(Ketinggian).filter(Ketinggian.id==e).first()   
+    #row5.disabled=1
+    #save_request5(row5)
     
-    #Untuk update disabled pada NSR
-    row6 = DBSession.query(Nsr).filter(Nsr.id==f).first()   
+    #Untuk update disabled pada Jenis / NSR
+    row6 = DBSession.query(Jenis).filter(Jenis.id==f).first()   
     row6.disabled=1
     save_request6(row6)
+    
+    #Untuk update disabled pada Lokasi Pasang
+    row7 = DBSession.query(Lokasi).filter(Lokasi.id==g).first()   
+    row7.disabled=1
+    save_request7(row7)
+    
+    #Untuk update disabled pada Sudut Pandang
+    row8 = DBSession.query(Sudut).filter(Sudut.id==h).first()   
+    row8.disabled=1
+    save_request8(row8)
     
     return row
     
@@ -506,7 +674,7 @@ def view_add(request):
 # Edit #
 ########
 def query_id(request):
-    return DBSession.query(OPreklame).filter_by(id=request.matchdict['id'])
+    return DBSession.query(Reklame).filter_by(id=request.matchdict['id'])
     
 def id_not_found(request):    
     msg = 'Objek Pajak ID %s not found.' % request.matchdict['id']
@@ -532,14 +700,27 @@ def view_edit(request):
     elif SESS_EDIT_FAILED in request.session:
         return session_failed(request, SESS_EDIT_FAILED)
     values = row.to_dict()
-    values['pemilik_nm']    = row and row.pemiliks.nama     or ''
-    values['rekening_nm']   = row and row.rekenings.nama    or ''
-    values['kelurahan_nm']  = row and row.kelurahans.nama   or ''
-    values['jalan_nm']      = row and row.jalans.nama       or ''
-    values['ketinggian_nm'] = row and row.ketinggians.nama  or ''
-    values['ketinggian_ni'] = row and row.ketinggians.nilai or 0
-    values['rek_nsr_nm']    = row and row.rek_nsr.nama      or ''
-    values['rek_nsr_ni']    = row and row.rek_nsr.nilai     or 0
+    values['pemilik_kd']    = row and row.pemiliks.kode       or ''
+    values['pemilik_nm']    = row and row.pemiliks.nama       or ''
+    values['rekening_nm']   = row and row.rekenings.nama      or ''
+    values['kecamatan_kd']  = row and row.kecamatans.kode     or ''
+    values['kecamatan_nm']  = row and row.kecamatans.nama     or ''
+    values['kelurahan_kd']  = row and row.kelurahans.kode     or ''
+    values['kelurahan_nm']  = row and row.kelurahans.nama     or ''
+    values['lokasi_kd']     = row and row.lokasi_pasangs.kode or ''
+    values['lokasi_nm']     = row and row.lokasi_pasangs.nama or ''
+    values['sudut_kd']      = row and row.sudut_pandangs.kode or ''
+    values['sudut_nm']      = row and row.sudut_pandangs.nama or ''
+    values['jalan_kd']      = row and row.jalans.kode         or ''
+    values['jalan_nm']      = row and row.jalans.nama         or ''
+    values['jenis_nm']      = row and row.jenis.nama          or ''
+    values['jenis_ni']      = row and row.jenis.nilai         or 0
+    #values['ketinggian_nm'] = row and row.ketinggians.nama    or ''
+    #values['ketinggian_ni'] = row and row.ketinggians.nilai   or 0
+    
+    #x = DBSession.query(Kecamatan.kode).filter(Kecamatan.nama==values['kecamatan']).first()   
+    #values['kecamatan_kd'] = "%s" % x
+    
     form.set_appstruct(values)
     return dict(form=form)
 
@@ -556,7 +737,7 @@ def view_delete(request):
     if not row:
         return id_not_found(request)
         
-    a = DBSession.query(TransaksiPajak).filter(TransaksiPajak.op_reklame_id==uid).first()
+    a = DBSession.query(Transaksi).filter(Transaksi.reklame_id==uid).first()
     if a:
         request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Transaksi Pajak.', 'error')
         return route_list(request)

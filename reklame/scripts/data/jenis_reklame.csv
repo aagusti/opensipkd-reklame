@@ -1,0 +1,20 @@
+id,kode,nama,rekening_id,status
+1,"TPB","Tiang Pancang Bersinar",2,1
+2,"TPTB","Tiang Pancang Tidak Bersinar",2,1
+3,"JPO","JPO / Fly Over",2,1
+4,"MB","Menempel Bersinar",11,1
+5,"MTB","Menempel Tidak Bersinar",11,1
+6,"MEG","Megatron / Videotron / dll (/m2)",2,1
+7,"BAN","Bando (/m2)",2,1
+8,"BR4L","Berjalan Lebih 4 Roda (/Unit)",6,1
+9,"BR4","Berjalan Roda 4 (/Unit)",6,1
+10,"BR2","Berjalan Roda 2 / Roda 3 (/Unit)",6,1
+11,"RMB","Rombong (/Unit)",6,1
+12,"PNT","Painting Wall / Branding Wall (/Unit)",3,1
+13,"BLG","Baligho / Banner (/m2)",3,1
+14,"SPN","Spanduk / Umbul-Umbul (/m2)",3,1
+15,"POS","Poster / Tempelan >A3 (/Lembar)",4,1
+16,"SLB","Selebaran / Brosur <=A3 (/Lembar)",5,1
+17,"BU","Balon Udara (/Unit)",8,1
+18,"FS","Film / Slide (/Unit)",10,1
+19,"PRGN","Peragaan (/Unit)",11,1

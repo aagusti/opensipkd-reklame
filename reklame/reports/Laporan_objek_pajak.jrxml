@@ -78,7 +78,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[Uraian]]></text>
+				<text><![CDATA[Keterangan]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="0" width="52" height="12"/>
@@ -130,7 +130,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[Rekening]]></text>
+				<text><![CDATA[Jenis Reklame]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="401" y="0" width="63" height="12"/>

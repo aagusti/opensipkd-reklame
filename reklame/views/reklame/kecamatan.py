@@ -16,7 +16,7 @@ from ...models import(
     DBSession,
     )
 from ...models.reklame import (
-    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Rekening, OPreklame, TransaksiPajak
+    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Rekening, Reklame, Transaksi
     )
 from datatables import ColumnDT, DataTables
 from datetime import datetime
@@ -254,7 +254,12 @@ def view_delete(request):
         
     a = DBSession.query(Kelurahan).filter(Kelurahan.kecamatan_id==uid).first()
     if a:
-        request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Objek Pajak.', 'error')
+        request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Tabel Kelurahan.', 'error')
+        return route_list(request)
+        
+    b = DBSession.query(Reklame).filter(Reklame.kecamatan_id==uid).first()
+    if b:
+        request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Tabel Objek Pajak.', 'error')
         return route_list(request)
         
     form = Form(colander.Schema(), buttons=('hapus','batal'))

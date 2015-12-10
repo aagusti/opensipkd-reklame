@@ -8,15 +8,12 @@
         <tr>
             <th>ID</th>
             <th>Kode</th>
-            <th>Uraian</th>
-            <th>Tahun</th>
-            <th>NOPD</th>
+            <th>Naskah</th>
             <th>SKPD</th>
-            <th>Objek Pajak</th>
             <th>Awal</th>
             <th>Akhir</th>
             <th>Jumlah Bayar</th>
-            <th>In-aktif</th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody>
@@ -31,18 +28,6 @@
       var oTable;
       var iPos;
       var oTableUrl = listUrl+"/grid/act";
-      Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
-        var n = this,
-            decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-            decSeparator = decSeparator == undefined ? "." : decSeparator,
-            thouSeparator = thouSeparator == undefined ? "," : thouSeparator,
-            sign = n < 0 ? "-" : "",
-            i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-            j = (j = i.length) > 3 ? j % 3 : 0;
-        return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
-      };
-
-        
       $(document).ready(function () {
         oTable = $('#table1').dataTable({
           "sDom"           : '<"toolbar">lfrtip',
@@ -63,15 +48,12 @@
               [10, 25, 50, 100]
           ],
           "aoColumnDefs": [
-		  {
-              "bSearchable": false,
-              "bVisible"   : false,
-              "aTargets"   : [0]
-          },{
-              "bSortable"  : false,
-              "aTargets"   : [2,4,5,6]
-          },{
-              "aTargets"   : [10], // Column number which needs to be modified
+            {
+                    "bSearchable": false,
+                    "bVisible"   : false,
+                    "aTargets"   : [0]
+                },{
+              "aTargets"   : [7], // Column number which needs to be modified
               "mRender"    : function (data, type, full) {
                   if (data == "0") {
                       return 'N';
@@ -80,18 +62,15 @@
                   }
               }
           }
-		  ],
+            ],
           "aoColumns": [
               null,
               {"width": "70px"},
+              null,
               {"width": "150px"},
-              {"width": "50px", "sClass": "center"},
               {"width": "100px"},
               {"width": "100px"},
-              {"width": "150px"},
-              {"width": "60px", "sClass": "center"},
-              {"width": "60px", "sClass": "center"},
-              {"width": "80px", "sClass": "center"},
+              {"width": "80px", "sClass": "right"},
               {"width": "40px", "sClass": "center"},
           ]
         });
@@ -108,7 +87,7 @@
         ];
  
 		// Pencarian Kondisi, ketika data yang dicari itu bukan dari data table
-        $('#table1_filter input').unbind();
+/*        $('#table1_filter input').unbind();
         $('#table1_filter input').bind('keyup', function(e) {
             if(e.keyCode == 13) {
                 oTable.fnFilter(this.value);   
@@ -122,7 +101,7 @@
                 }
             }
         });
-        
+        */
         var tb = tb_array.join(' ');
         $("div.toolbar").html(tb);
         $("div.toolbar").attr('style', 'display:block; float: left; margin-bottom:6px; line-height:16px;');

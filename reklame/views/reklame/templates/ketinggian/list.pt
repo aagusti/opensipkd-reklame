@@ -9,6 +9,8 @@
             <th>ID</th>
             <th>Kode</th>
             <th>Uraian</th>
+            <th>Tinggi Min</th>
+            <th>Tinggi Max</th>
             <th>Nilai</th>
             <th>In-aktif</th>
         </tr>
@@ -65,7 +67,7 @@
               "bSortable"  : false,
               "aTargets"   : [2]
           },{
-              "aTargets"   : [4], // Column number which needs to be modified
+              "aTargets"   : [6], // Column number which needs to be modified
               "mRender"    : function (data, type, full) {
                   if (data == "0") {
                       return 'N';
@@ -77,9 +79,11 @@
 		  ],
           "aoColumns": [
               null,
-              {"width": "200px"},
-              null,
-              {"width": "70px"},
+              {"width": "80px"},
+              {"width": "300px"},
+              {"width": "50px", "sClass": "right"},
+              {"width": "50px", "sClass": "right"},
+              {"width": "70px", "sClass": "right"},
               {"width": "50px", "sClass": "center"},
           ]
         });

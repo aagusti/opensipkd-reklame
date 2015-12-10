@@ -8,7 +8,8 @@ from sqlalchemy import (
     ForeignKey,
     UniqueConstraint,
     String,
-    SmallInteger
+    SmallInteger,
+    types,
     )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.exc import NoResultFound
@@ -53,7 +54,10 @@ class CommonModel(object):
     def from_dict(self, values):
         for column in self.__table__.columns:
             if column.name in values:
-                setattr(self, column.name, values[column.name])
+                if column.type==FLOAT:
+                    setattr(self, column.name, float(values[column.name]))
+                else:
+                    setattr(self, column.name, values[column.name])
 
     def as_timezone(self, fieldname):
         date_ = getattr(self, fieldname)
@@ -249,8 +253,8 @@ class Route(Base, DefaultModel):
     kode       = Column(String(256))
     nama       = Column(String(256))
     path       = Column(String(256), nullable=False)
-    disabled   = Column(SmallInteger, nullable=False, default=0,
-                        server_default='0')
+    status   = Column(SmallInteger, nullable=False, default=1,
+                        server_default='1')
     created    = Column(DateTime, nullable=True, default=datetime.now,
                         server_default='now()')
     updated    = Column(DateTime, nullable=True)

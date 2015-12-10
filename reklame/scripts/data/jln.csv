@@ -1,0 +1,134 @@
+id,kode,nama,kelas_jalan_id,disabled
+1,"101","Area Jalan Tol Jagorawi / BORR",1,0
+2,"102","Jl. Pajajaran ( Taman Depan Terminal Baranangsiang )",1,0
+3,"103","Jl. Pajajaran ( Taman Dekat Rumah Dinas Walikota )",1,0
+4,"104","Jl. Pajajaran ( Taman Warung Jambu )",1,0
+5,"105","Jl. Pajajaran ( Taman Depan Plaza Ekalokasari )",1,0
+6,"106","Jl. KH. Soleh Iskandar ( Taman Tugu Narkoba / Taman Pertigaan Yasmin )",1,0
+7,"107","Jl. Jend. Sudirman ( Taman Air Mancur )",1,0
+8,"108","Jl. Mayjen Ishak Djuarsa ( Taman Pertigaan Jl. RE. Abdullah )",1,0
+9,"201","Jl. Pajajaran ( Plaza Ekalokasari - Warung Jambu )",2,0
+10,"202","Jl. R. Saleh S. Bustaman ( Simpang Jl. Djuanda - Simpang Jl. Pahlawan )",2,0
+11,"203","Jl. KH. Soleh Iskandar (  Tugu Narkoba s/d SimpangYasmin )",2,0
+12,"204","Jl. KS. Tubun ( Warung Jambu - Talang )",2,0
+13,"205","Jl. KH. Abdullah Bin Nuh ( Yasmin - Bubulak )",2,0
+14,"206","Jl. Letjen. Ibrahim Adjie ( Sindang Barang )",2,0
+15,"207","Jl. Mayjen. Ishak Djuarsa / Gunung Batu",2,0
+16,"208","Jl. Siliwangi",2,0
+17,"209","Jl. Veteran",2,0
+18,"210","Jl. Raya Sukabumi / Ciawi",2,0
+19,"211","Jl. Raya Tajur / Wangun",2,0
+20,"212","Jl. Ir. H. Djuanda",2,0
+21,"213","Jl. Jalak Harupat",2,0
+22,"214","Jl. Jend. Sudirman",2,0
+23,"215","Jl. Kapt. Muslihat",2,0
+24,"216","Jl. Otista",2,0
+25,"217","Jl. Suryakencana",2,0
+26,"218","Jl. Pahlawan",2,0
+27,"301","Jl. Kebon Pedes",3,0
+28,"302","Jl. Kedung Halang / Talang / Pomad / Ciluar",3,0
+29,"303","Jl. KH. Soleh Iskandar / Kayu Manis / Salabenda",3,0
+30,"304","Jl. Letjen. Ibrahim Adjie ( Loji )",3,0
+31,"305","Jl. Lawang Gintung / Jl. Batutulis",3,0
+32,"306","Jl. Sawojajar",3,0
+33,"307","Jl. Dewi Sartika",3,0
+34,"308","Jl. Mayor Oking",3,0
+35,"309","Jl. Paledang",3,0
+36,"310","Jl. Jend. Ahmad Yani",3,0
+37,"311","Jl. Pengadilan",3,0
+38,"312","Jl. Brigjen. Saptaji Hadiprawira / Cilendek / Cemplang",3,0
+39,"313","Jl. Kol. H. Achmad Syam",3,0
+40,"314","Jl. R. H. Muhamad Tohir",3,0
+41,"315","Jl. H. Ahmad Adnawijaya / Pandu / Pandawa",3,0
+42,"316","Jl. H. Ahmad Sobana / Bangbarung Raya",3,0
+43,"317","Jl. Tentara Pelajar / Cimanggu Pahlawan",3,0
+44,"318","Jl. Raya Pemda",3,0
+45,"319","Jl. Merdeka / Jl. Perintis Kemerdekaan",3,0
+46,"320","Jl. Bantar Kemang / Durian Raya / Parung Banteng",3,0
+47,"321","Jl. RE. Martadinata / Ciwaringin",3,0
+48,"322","Jl. RE. Abdullah / Pasir Kuda",3,0
+49,"323","Jl. Pahlawan",3,0
+50,"324","Jl. Raya Dramaga",3,0
+51,"325","Jl. R. Aria Surialaga / Cibalagung",3,0
+52,"326","Jl. Pemuda / Jl. Dadali",3,0
+53,"327","Jl. Dr. Semeru",3,0
+54,"328","Jl. Nyi Raja Permas / Jl. MA. Salmun",3,0
+55,"329","Jl. Lodaya",3,0
+56,"330","Jl. Sukasari I",3,0
+57,"331","Jl. Malabar",3,0
+58,"332","Jl. Binamarga",3,0
+59,"333","Jl. Mawar",3,0
+60,"401","Jl. Sukasari II / III",4,0
+61,"402","Jl. Abesin",4,0
+62,"403","Jl. Ardio",4,0
+63,"404","Jl. Belitung",4,0
+64,"405","Jl. Burangrang",4,0
+65,"406","Jl. Bukit Tunggul",4,0
+66,"407","Jl. Beo",4,0
+67,"408","Jl. Bango",4,0
+68,"409","Jl. Bogor Baru / Tegallega",4,0
+69,"410","Jl. Ciford / SBJ",4,0
+70,"411","Jl. Ceremai",4,0
+71,"412","Jl. Cangkurileung",4,0
+72,"413","Jl. Cikuray",4,0
+73,"414","Jl. Ciliwung",4,0
+74,"415","Jl. Cincau",4,0
+75,"416","Jl. Ciung",4,0
+76,"417","Jl. Cipaku",4,0
+77,"418","Jl. Cikaret",4,0
+78,"419","Jl. Cempaka",4,0
+79,"420","Jl. Cibalok",4,0
+80,"421","Jl. Cimanggu",4,0
+81,"422","Jl. Drs. Dana Sasmita / Stasiun Batutulis",4,0
+82,"423","Jl. Empang Pulo / R. Aria Suriawinata",4,0
+83,"424","Jl. R. Aria Wiranata",4,0
+84,"425","Jl. Gang Aut",4,0
+85,"426","Jl. Guntur",4,0
+86,"427","Jl. Gedong Sawah I / II / III / IV",4,0
+87,"428","Jl. Gereja",4,0
+88,"429","Jl. Heulang",4,0
+89,"430","Jl. Kelenteng",4,0
+90,"431","Jl. Kumbang",4,0
+91,"432","Jl. Kantor Batu",4,0
+92,"433","Jl. Kantin",4,0
+93,"434","Jl. Kartini",4,0
+94,"435","Jl. Kapt. Yusuf",4,0
+95,"436","Jl. Lawang Saketeng",4,0
+96,"437","Jl. Mekah",4,0
+97,"438","Jl. Merak",4,0
+98,"439","Jl. Mega Mendung",4,0
+99,"440","Jl. Pondang",4,0
+100,"441","Jl. Pamoyanan",4,0
+101,"442","Jl. Pancasan",4,0
+102,"443","Jl. Pasar",4,0
+103,"444","Jl. Pedati",4,0
+104,"445","Jl. Pakuan",4,0
+105,"446","Jl. Papandayan",4,0
+106,"447","Jl. Perkutut",4,0
+107,"448","Jl. Polisi I / II",4,0
+108,"449","Jl. Puter",4,0
+109,"450","Jl. Pondang",4,0
+110,"451","Jl. Pangrango",4,0
+111,"452","Jl. Pabaton",4,0
+112,"453","Jl. Rangga Gading",4,0
+113,"454","Jl. Roda",4,0
+114,"455","Jl. Riau",4,0
+115,"456","Jl. R. Aria Suriawinata / Empang Pulo",4,0
+116,"457","Jl. Rumah Sakit PMI I / II",4,0
+117,"458","Jl. RE. Abdullah / Pasir Kuda",4,0
+118,"459","Jl. Sancang",4,0
+119,"460","Jl. Sanggabuana",4,0
+120,"461","Jl. Selot",4,0
+121,"462","Jl. Sri Gunting",4,0
+122,"463","Jl. Sukamulya",4,0
+123,"464","Jl. Salak",4,0
+124,"465","Jl. Tampomas",4,0
+125,"466","Jl. Pabaton",4,0
+126,"467","Jl. Pangeran Sogiri / Tanah Baru",4,0
+127,"468","Jl. R. Koyong",4,0
+128,"469","Jl. R. Ka'nan / Pasar Tanah Baru",4,0
+129,"470","Jl. R. Khanafiah",4,0
+130,"471","Jl. Guru Muchtar / Ciomas - Ciapus",4,0
+131,"472","Jl. Tumenggung Wiradiredja / Cimahpar",4,0
+132,"501","Jalan Lingkungan & Setiap Jalan / Gang",5,0
+133,"502","Tempat Yang Tidak Termasuk Jalur Khusus / Utama / I / II",5,0

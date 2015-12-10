@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/reklame">Pajak Reklame</a>
+          <a class="navbar-brand" href="/reklame">Titik Reklame</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -55,13 +55,22 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Master <b class="caret"></b></a>
               <ul class="dropdown-menu">    
+                <li><a href="/urusan">Urusan</a></li>             
+                <li><a href="/unit">Unit Kerja</a></li>            
+                <li><a href="/user/unit">User Unit</a></li>               
+                <li><a href="/rekening">Rekening</a></li>                
                 <li><a href="/reklame/pemilik">Pemilik</a></li>        
                 <li><a href="/reklame/kecamatan">Kecamatan</a></li>
-                <li><a href="/reklame/kelurahan">Kelurahan</a></li>    
-                <li><a href="/reklame/jalan">Jalan</a></li>   
-                <li><a href="/reklame/jalan/kelas">Kelas Jalan</a></li>      
-                <li><a href="/reklame/ketinggian">Ketinggian</a></li>   
-                <li><a href="/reklame/nsr">Nilai Sewa Reklame</a></li>         
+                <li><a href="/reklame/kelurahan">Kelurahan</a></li>  
+                <li><a href="/reklame/jalan/kelas">Kelas Jalan</a></li>    
+                <li><a href="/reklame/jalan">Jalan</a></li>       
+                <li><a href="/reklame/jenis">Jenis Reklame</a></li>
+                <li><a href="/reklame/ketinggian">Ketinggian</a></li>     
+                <li><a href="/reklame/lokasi">Lokasi Pasang Reklame</a></li>   
+                <li><a href="/reklame/sudut">Sudut Pandang Reklame</a></li>  
+                <li><a href="/reklame/njop">Nilai Jual Objek Pajak Reklame</a></li>
+                <li><a href="/reklame/strategis">Nilai Satuan Strategis Reklame</a></li>                        
+                <li><a href="/reklame/jenis">Jenis / Nilai Sewa Reklame</a></li>  
               </ul>
             </li>
             
@@ -71,12 +80,8 @@
                 <li><a href="/user">User</a></li>                
                 <li><a href="/group">Group</a></li>                
                 <li><a href="/routes">Route</a></li>           
-                <li><a href="/user/unit">User Unit</a></li>               
                 <li><a href="/user/group">User Groups</a></li>                
                 <li><a href="/group/routes">Group Permission</a></li>   
-                <li><a href="/urusan">Urusan</a></li>             
-                <li><a href="/unit">Unit Kerja</a></li>            
-                <li><a href="/rekening">Rekening</a></li>                
               </ul>
             </li>
           </ul>

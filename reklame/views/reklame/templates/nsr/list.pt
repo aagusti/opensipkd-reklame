@@ -20,7 +20,7 @@
 </div>
   <div metal:fill-slot="scripts">
     <script>
-      var listUrl = "/reklame/nsr";
+      var listUrl = "/reklame/jenis";
       var mID;
       var mThn;
       var oTable;
@@ -81,7 +81,7 @@
               {"width": "100px"},
               {"width": "300px"},
               {"width": "300px"},
-              {"width": "70px"},
+              {"width": "70px", "sClass": "right"},
               {"width": "50px", "sClass": "center"},
           ]
         });

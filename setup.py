@@ -39,9 +39,9 @@ if sys.argv[1:] and sys.argv[1] == 'develop-use-pip':
     subprocess.call(cmd)
     sys.exit()
 
-setup(name='reklame',
+setup(name='opensipkd-reklame',
       version='0.0',
-      description='reklame',
+      description='opensipkd-reklame',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
         "Programming Language :: Python",
@@ -58,7 +58,7 @@ setup(name='reklame',
       zip_safe=False,
       install_requires=requires,
       tests_require=requires,
-      test_suite="reklame",
+      test_suite="opensipkd-reklame",
       entry_points = """\
       [paste.app_factory]
       main = reklame:main

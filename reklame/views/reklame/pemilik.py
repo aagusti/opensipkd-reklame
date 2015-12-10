@@ -16,7 +16,7 @@ from ...models import(
     DBSession,
     )
 from ...models.reklame import (
-    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Rekening, OPreklame, TransaksiPajak
+    Kecamatan, Kelurahan, KelasJalan, Jalan, Pemilik, Rekening, Reklame, Transaksi
     )
 from datatables import ColumnDT, DataTables
 from datetime import datetime
@@ -50,9 +50,8 @@ def pemilik_act(request):
         columns.append(ColumnDT('kode'))
         columns.append(ColumnDT('nama'))
         columns.append(ColumnDT('alamat'))
-        columns.append(ColumnDT('no_telp'))
-        columns.append(ColumnDT('no_fax'))
-        columns.append(ColumnDT('no_hp'))
+        columns.append(ColumnDT('telephone'))
+        columns.append(ColumnDT('mobile'))
         columns.append(ColumnDT('disabled'))
         
         query = DBSession.query(Pemilik)
@@ -65,11 +64,8 @@ def pemilik_act(request):
                                Pemilik.kode, 
                                Pemilik.nama,
                                Pemilik.alamat, 
-                               Pemilik.no_telp,
-                               Pemilik.no_fax,
-                               Pemilik.no_hp, 
-                               Pemilik.email,
-                               Pemilik.kd_pos,
+                               Pemilik.telephone,
+                               Pemilik.mobile,
                        ).filter(Pemilik.nama.ilike('%%%s%%' % term) 
                        ).all()
         r = []
@@ -81,10 +77,7 @@ def pemilik_act(request):
             d['nama']    = k[2]
             d['alamat']  = k[3]
             d['telp']    = k[4]
-            d['fax']     = k[5]
-            d['hp']      = k[6]
-            d['email']   = k[7]
-            d['kd_pos']  = k[8]
+            d['mobile']  = k[5]
             r.append(d)
         return r   
            
@@ -94,11 +87,8 @@ def pemilik_act(request):
                                Pemilik.kode, 
                                Pemilik.nama,
                                Pemilik.alamat, 
-                               Pemilik.no_telp,
-                               Pemilik.no_fax,
-                               Pemilik.no_hp, 
-                               Pemilik.email,
-                               Pemilik.kd_pos,
+                               Pemilik.telephone,
+                               Pemilik.mobile,
                        ).filter(Pemilik.kode.ilike('%%%s%%' % term) 
                        ).all()
         r = []
@@ -110,10 +100,7 @@ def pemilik_act(request):
             d['nama']    = k[2]
             d['alamat']  = k[3]
             d['telp']    = k[4]
-            d['fax']     = k[5]
-            d['hp']      = k[6]
-            d['email']   = k[7]
-            d['kd_pos']  = k[8]
+            d['mobile']  = k[5]
             r.append(d)
         return r    
             
@@ -177,31 +164,16 @@ class AddSchema(colander.Schema):
                     #missing=colander.drop,
                     oid = "alamat",
                     title = "Alamat")
-    no_telp       = colander.SchemaNode(
+    telephone     = colander.SchemaNode(
                     colander.String(),
                     #missing=colander.drop,
-                    oid = "no_telp",
+                    oid = "telephone",
                     title = "No.Telp")
-    no_fax        = colander.SchemaNode(
+    mobile        = colander.SchemaNode(
                     colander.String(),
                     #missing=colander.drop,
-                    oid = "no_fax",
-                    title = "No.Fax")
-    no_hp         = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid = "no_hp",
-                    title = "No.Hp")
-    email         = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid = "email",
-                    title = "E-mail")
-    kd_pos        = colander.SchemaNode(
-                    colander.String(),
-                    #missing=colander.drop,
-                    oid = "kd_pos",
-                    title = "Kode Pos")
+                    oid = "mobile",
+                    title = "No.Mobile")
     disabled      = colander.SchemaNode(
                     colander.Integer(),
                     widget=deferred_status)
@@ -310,7 +282,7 @@ def view_delete(request):
     if not row:
         return id_not_found(request)
         
-    a = DBSession.query(OPreklame).filter(OPreklame.pemilik_id==uid).first()
+    a = DBSession.query(Reklame).filter(Reklame.pemilik_id==uid).first()
     if a:
         request.session.flash('Data tidak bisa dihapus, karena sudah masuk di Objek Pajak.', 'error')
         return route_list(request)

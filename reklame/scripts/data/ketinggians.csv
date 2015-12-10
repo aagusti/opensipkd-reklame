@@ -1,0 +1,3 @@
+id,kode,nama,nilai,disabled,tinggi_min,tinggi_max
+1,"001","Ketinggian bukan LED+Bando",100000,0,0,100
+2,"002","Ketinggian LED, bando, megatron, video, dinamic, display",150000,0,0,100

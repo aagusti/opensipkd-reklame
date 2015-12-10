@@ -9,9 +9,18 @@ from data.user import UserData
 from data.routes import RouteData
 from data.reklame import ReklameData
 from data.kls_jln import KelasJalanData
+from data.jln import JalanData
 from data.rekenings import RekeningData
+from data.ketinggians import KetinggianData
+from data.nssr import StrategisData
+from data.njop import NjopData
+from data.nsr import NilaiSewaData
+from data.sudut import SudutData
+from data.lokasi import LokasiData
 from data.urusans import UrusanData
 from data.units import UnitData
+from data.jenis_reklame import JenisReklameData
+from data.jenis_nssr import JenisNssrData
 
 from DbTools import (
     get_pkeys,
@@ -32,7 +41,16 @@ fixtures = [
     ('routes', RouteData),
     ('routes', ReklameData),
     ('reklame.kelas_jalans', KelasJalanData),
+    ('reklame.jalans', JalanData),
     ('reklame.rekenings', RekeningData),
+    ('reklame.ketinggians', KetinggianData),
+    ('reklame.jenis', NilaiSewaData),
+    ('reklame.jenis_nssr', JenisNssrData),
+    ('reklame.nssr', StrategisData),
+    ('reklame.njop', NjopData),
+    ('reklame.sudut_pandangs', SudutData),
+    ('reklame.lokasi_pasangs', LokasiData),
+    ('reklame.jenis_reklame', JenisReklameData),
     ('pemda.urusans', UrusanData),
     ('pemda.units', UnitData),
     ]

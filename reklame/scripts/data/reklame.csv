@@ -1,49 +1,84 @@
-id,kode,path,nama
-30000,"reklame","/reklame","Pajak Reklame"        
-30001,"reklame-kecamatan","/reklame/kecamatan","Kecamatan"
-30002,"reklame-kecamatan-act","/reklame/kecamatan/{act}/act","Baca Kecamatan"
-30003,"reklame-kecamatan-add","/reklame/kecamatan/add","Tambah Kecamatan"
-30004,"reklame-kecamatan-edit","/reklame/kecamatan/{id}/edit","Edit Kecamatan"
-30005,"reklame-kecamatan-delete","/reklame/kecamatan/{id}/delete","Hapus Kecamatan"  
-30006,"reklame-kelurahan","/reklame/kelurahan","Kelurahan"
-30007,"reklame-kelurahan-act","/reklame/kelurahan/{act}/act","Baca Kelurahan"
-30008,"reklame-kelurahan-add","/reklame/kelurahan/add","Tambah Kelurahan"
-30009,"reklame-kelurahan-edit","/reklame/kelurahan/{id}/edit","Edit Kelurahan"
-30010,"reklame-kelurahan-delete","/reklame/kelurahan/{id}/delete","Hapus Kelurahan" 
-30011,"reklame-jalan","/reklame/jalan","Jalan"
-30012,"reklame-jalan-act","/reklame/jalan/{act}/act","Baca Jalan"
-30013,"reklame-jalan-add","/reklame/jalan/add","Tambah Jalan"
-30014,"reklame-jalan-edit","/reklame/jalan/{id}/edit","Edit Jalan"
-30015,"reklame-jalan-delete","/reklame/jalan/{id}/delete","Hapus Jalan"
-30016,"reklame-jalan-kelas","/reklame/jalan/kelas","Kelas Jalan"
-30017,"reklame-jalan-kelas-act","/reklame/jalan/kelas/{act}/act","Baca Kelas Jalan"
-30018,"reklame-jalan-kelas-add","/reklame/jalan/kelas/add","Tambah Kelas Jalan"
-30019,"reklame-jalan-kelas-edit","/reklame/jalan/kelas/{id}/edit","Edit Kelas Jalan"
-30020,"reklame-jalan-kelas-delete","/reklame/jalan/kelas/{id}/delete","Hapus Kelas Jalan"
-30021,"reklame-pemilik","/reklame/pemilik","Pemilik"
-30022,"reklame-pemilik-act","/reklame/pemilik/{act}/act","Baca Pemilik"
-30023,"reklame-pemilik-add","/reklame/pemilik/add","Tambah Pemilik"
-30024,"reklame-pemilik-edit","/reklame/pemilik/{id}/edit","Edit Pemilik"
-30025,"reklame-pemilik-delete","/reklame/pemilik/{id}/delete","Hapus Pemilik"
-30026,"reklame-ketinggian","/reklame/ketinggian","Ketinggian"
-30027,"reklame-ketinggian-act","/reklame/ketinggian/{act}/act","Baca Ketinggian"
-30028,"reklame-ketinggian-add","/reklame/ketinggian/add","Tambah Ketinggian"
-30029,"reklame-ketinggian-edit","/reklame/ketinggian/{id}/edit","Edit Ketinggian"
-30030,"reklame-ketinggian-delete","/reklame/ketinggian/{id}/delete","Hapus Ketinggian"
-30031,"reklame-nsr","/reklame/nsr","NSR"
-30032,"reklame-nsr-act","/reklame/nsr/{act}/act","Baca NSR"
-30033,"reklame-nsr-add","/reklame/nsr/add","Tambah NSR"
-30034,"reklame-nsr-edit","/reklame/nsr/{id}/edit","Edit NSR"
-30035,"reklame-nsr-delete","/reklame/nsr/{id}/delete","Hapus NSR"
-30036,"reklame-opreklame","/reklame/opreklame","Objek Pajak"
-30037,"reklame-opreklame-act","/reklame/opreklame/{act}/act","Baca Objek Pajak"
-30038,"reklame-opreklame-add","/reklame/opreklame/add","Tambah Objek Pajak"
-30039,"reklame-opreklame-edit","/reklame/opreklame/{id}/edit","Edit Objek Pajak"
-30040,"reklame-opreklame-delete","/reklame/opreklame/{id}/delete","Hapus Objek Pajak" 
-30041,"reklame-transaksi","/reklame/transaksi","Transaksi Pajak"
-30042,"reklame-transaksi-act","/reklame/transaksi/{act}/act","Baca Transaksi Pajak"
-30043,"reklame-transaksi-add","/reklame/transaksi/add","Tambah Transaksi Pajak"
-30044,"reklame-transaksi-edit","/reklame/transaksi/{id}/edit","Edit Transaksi Pajak"
-30045,"reklame-transaksi-delete","/reklame/transaksi/{id}/delete","Hapus Transaksi Pajak" 
-30046,"reklame-opreklame-report","/reklame/opreklame/report","Laporan Pajak Reklame"
-30047,"reklame-opreklame-report-act","/reklame/opreklame/report/act/{act}","Baca Laporan Pajak Reklame"
+id,kode,path,nama,status
+30000,"reklame","/reklame","Titik Reklame",1
+30001,"reklame-kecamatan","/reklame/kecamatan","Kecamatan",1
+30002,"reklame-kecamatan-act","/reklame/kecamatan/{act}/act","Baca Kecamatan",2
+30003,"reklame-kecamatan-add","/reklame/kecamatan/add","Tambah Kecamatan",1
+30004,"reklame-kecamatan-edit","/reklame/kecamatan/{id}/edit","Edit Kecamatan",1
+30005,"reklame-kecamatan-delete","/reklame/kecamatan/{id}/delete","Hapus Kecamatan",1
+30006,"reklame-kelurahan","/reklame/kelurahan","Kelurahan",1
+30007,"reklame-kelurahan-act","/reklame/kelurahan/{act}/act","Baca Kelurahan",2
+30008,"reklame-kelurahan-add","/reklame/kelurahan/add","Tambah Kelurahan",1
+30009,"reklame-kelurahan-edit","/reklame/kelurahan/{id}/edit","Edit Kelurahan",1
+30010,"reklame-kelurahan-delete","/reklame/kelurahan/{id}/delete","Hapus Kelurahan",1
+30011,"reklame-jalan","/reklame/jalan","Jalan",1
+30012,"reklame-jalan-act","/reklame/jalan/{act}/act","Baca Jalan",2
+30013,"reklame-jalan-add","/reklame/jalan/add","Tambah Jalan",1
+30014,"reklame-jalan-edit","/reklame/jalan/{id}/edit","Edit Jalan",1
+30015,"reklame-jalan-delete","/reklame/jalan/{id}/delete","Hapus Jalan",1
+30016,"reklame-jalan-kelas","/reklame/jalan/kelas","Kelas Jalan",1
+30017,"reklame-jalan-kelas-act","/reklame/jalan/kelas/{act}/act","Baca Kelas Jalan",2
+30018,"reklame-jalan-kelas-add","/reklame/jalan/kelas/add","Tambah Kelas Jalan",1
+30019,"reklame-jalan-kelas-edit","/reklame/jalan/kelas/{id}/edit","Edit Kelas Jalan",1
+30020,"reklame-jalan-kelas-delete","/reklame/jalan/kelas/{id}/delete","Hapus Kelas Jalan",1
+30021,"reklame-pemilik","/reklame/pemilik","Pemilik",1
+30022,"reklame-pemilik-act","/reklame/pemilik/{act}/act","Baca Pemilik",2
+30023,"reklame-pemilik-add","/reklame/pemilik/add","Tambah Pemilik",1
+30024,"reklame-pemilik-edit","/reklame/pemilik/{id}/edit","Edit Pemilik",1
+30025,"reklame-pemilik-delete","/reklame/pemilik/{id}/delete","Hapus Pemilik",1
+30026,"reklame-ketinggian","/reklame/ketinggian","Ketinggian",1
+30027,"reklame-ketinggian-act","/reklame/ketinggian/{act}/act","Baca Ketinggian",2
+30028,"reklame-ketinggian-add","/reklame/ketinggian/add","Tambah Ketinggian",1
+30029,"reklame-ketinggian-edit","/reklame/ketinggian/{id}/edit","Edit Ketinggian",1
+30030,"reklame-ketinggian-delete","/reklame/ketinggian/{id}/delete","Hapus Ketinggian",1
+30031,"reklame-nsr","/reklame/nsr","Jenis Reklame",1
+30032,"reklame-nsr-act","/reklame/nsr/{act}/act","Baca NSR Reklame",1
+30033,"reklame-nsr-add","/reklame/nsr/add","Tambah nsr Reklame",1
+30034,"reklame-nsr-edit","/reklame/nsr/{id}/edit","Edit nsr Reklame",1
+30035,"reklame-nsr-delete","/reklame/nsr/{id}/delete","Hapus nsr Reklame",1
+30036,"reklame-nssr","/reklame/nssr","Nilai Satuan Strategis Reklame",1
+30037,"reklame-nssr-act","/reklame/nssr/{act}/act","Baca Nilai Satuan Strategis Reklame",1
+30038,"reklame-nssr-add","/reklame/nssr/add","Tambah Nilai Satuan Strategis Reklame",1
+30039,"reklame-nssr-edit","/reklame/nssr/{id}/edit","Edit Nilai Satuan Strategis Reklame",1
+30040,"reklame-nssr-delete","/reklame/nssr/{id}/delete","Hapus Nilai Satuan Strategis Reklame",1
+30041,"reklame-njop","/reklame/njop","Nilai Jual Objek Pajak Reklame",1
+30042,"reklame-njop-act","/reklame/njop/{act}/act","Baca Nilai Jual Objek Pajak Reklame",1
+30043,"reklame-njop-add","/reklame/njop/add","Tambah Nilai Jual Objek Pajak Reklame",1
+30044,"reklame-njop-edit","/reklame/njop/{id}/edit","Edit Nilai Jual Objek Pajak Reklame",1
+30045,"reklame-njop-delete","/reklame/njop/{id}/delete","Hapus Nilai Jual Objek Pajak Reklame",1
+30046,"reklame-lokasi","/reklame/lokasi","Lokasi Pasang Reklame",1
+30047,"reklame-lokasi-act","/reklame/lokasi/{act}/act","Baca Lokasi Pasang Reklame",1
+30048,"reklame-lokasi-add","/reklame/lokasi/add","Tambah Lokasi Pasang Reklame",1
+30049,"reklame-lokasi-edit","/reklame/lokasi/{id}/edit","Edit Lokasi Pasang Reklame",1
+30050,"reklame-lokasi-delete","/reklame/lokasi/{id}/delete","Hapus Lokasi Pasang Reklame",1
+30051,"reklame-sudut","/reklame/sudut","Sudut Pandang Reklame",1
+30052,"reklame-sudut-act","/reklame/sudut/{act}/act","Baca Sudut Pandang Reklame",1
+30053,"reklame-sudut-add","/reklame/sudut/add","Tambah Sudut Pandang Reklame",1
+30054,"reklame-sudut-edit","/reklame/sudut/{id}/edit","Edit Sudut Pandang Reklame",1
+30055,"reklame-sudut-delete","/reklame/sudut/{id}/delete","Hapus Sudut Pandang Reklame",1
+30056,"reklame-bahan","/reklame/bahan","Bahan Reklame",1
+30057,"reklame-bahan-act","/reklame/bahan/{act}/act","Baca Bahan Reklame",1
+30058,"reklame-bahan-add","/reklame/bahan/add","Tambah Bahan Reklame",1
+30059,"reklame-bahan-edit","/reklame/bahan/{id}/edit","Edit Bahan Reklame",1
+30060,"reklame-bahan-delete","/reklame/bahan/{id}/delete","Hapus Bahan Reklame",1
+30061,"reklame-opreklame","/reklame/opreklame","Objek Pajak",1
+30062,"reklame-opreklame-act","/reklame/opreklame/{act}/act","Baca Objek Pajak",1
+30063,"reklame-opreklame-add","/reklame/opreklame/add","Tambah Objek Pajak",1
+30064,"reklame-opreklame-edit","/reklame/opreklame/{id}/edit","Edit Objek Pajak",1
+30065,"reklame-opreklame-delete","/reklame/opreklame/{id}/delete","Hapus Objek Pajak",1
+30066,"reklame-transaksi","/reklame/transaksi","Transaksi Pajak",1
+30067,"reklame-transaksi-act","/reklame/transaksi/{act}/act","Baca Transaksi Pajak",1
+30068,"reklame-transaksi-add","/reklame/transaksi/add","Tambah Transaksi Pajak",1
+30069,"reklame-transaksi-edit","/reklame/transaksi/{id}/edit","Edit Transaksi Pajak",1
+30070,"reklame-transaksi-delete","/reklame/transaksi/{id}/delete","Hapus Transaksi Pajak",1
+30071,"reklame-opreklame-report","/reklame/opreklame/report","Laporan Pajak Reklame",1
+30072,"reklame-opreklame-report-act","/reklame/opreklame/report/act/{act}","Baca Laporan Pajak Reklame",1
+30073,"reklame-jenis","/reklame/jenis","Jenis Reklame",1
+30074,"reklame-jenis-act","/reklame/jenis/{act}/act","Baca Jenis Reklame",1
+30075,"reklame-jenis-add","/reklame/jenis/add","Tambah Jenis Reklame",1
+30076,"reklame-jenis-edit","/reklame/jenis/{id}/edit","Edit Jenis Reklame",1
+30077,"reklame-jenis-delete","/reklame/jenis/{id}/delete","Hapus Jenis Reklame",1
+30078,"reklame-jenis-nssr","/reklame/jenis-nssr","Jenis NSSR",1
+30079,"reklame-jenis-nssr-act","/reklame/jenis-nssr/{act}/act","Baca Jenis NSSR",2
+30080,"reklame-jenis-nssr-add","/reklame/jenis-nssr/add","Tambah Jenis NSSR",1
+30081,"reklame-jenis-nssr-edit","/reklame/jenis-nssr/{id}/edit","Edit Jenis NSSR",1
+30082,"reklame-jenis-nssr-delete","/reklame/jenis-nssr/{id}/delete","Hapus Jenis NSSR",1

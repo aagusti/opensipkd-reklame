@@ -65,7 +65,7 @@
                  "highlight": true,
                  "minLength": 1,
 				 "limit"    : 10,
-                 "remote"   : "/reklame/jalan/kelas/hon_kls/act?term=%QUERY",
+                 "remote"   : "/reklame/jalan/kelas/hon/act?term=%QUERY",
             },{
                 "name"      : 'kelas_jalan_nm',
                 "displayKey": 'value',

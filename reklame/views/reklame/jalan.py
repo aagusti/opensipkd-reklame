@@ -56,26 +56,8 @@ def jalan_act(request):
         rowTable = DataTables(req, Jalan, query, columns)
         return rowTable.output_result()
     
-    elif url_dict['act']=='grid1':
-        cari = 'cari' in params and params['cari'] or ''
-        columns = []
-        columns.append(ColumnDT('id'))
-        columns.append(ColumnDT('kode'))
-        columns.append(ColumnDT('nama'))
-        columns.append(ColumnDT('kelas_jalans.nama'))
-        columns.append(ColumnDT('disabled'))
         
-        query = DBSession.query(Jalan
-                        ).join(KelasJalan
-                        ).filter(Jalan.kelas_jalan_id == KelasJalan.id,
-                                 or_(KelasJalan.nama.ilike('%%%s%%' % cari),
-                                     Jalan.kode.ilike('%%%s%%' % cari),
-                                     Jalan.nama.ilike('%%%s%%' % cari))
-                        )
-        rowTable = DataTables(req, Jalan, query, columns)
-        return rowTable.output_result()
-        
-    elif url_dict['act']=='hon_jal':
+    elif url_dict['act']=='hon':
         term = 'term' in params and params['term'] or '' 
         rows = DBSession.query(Jalan.id, 
                                Jalan.kode, 
@@ -92,7 +74,7 @@ def jalan_act(request):
             r.append(d)
         return r   
            
-    elif url_dict['act']=='hok_jal':
+    elif url_dict['act']=='hok':
         term = 'term' in params and params['term'] or '' 
         rows = DBSession.query(Jalan.id, 
                                Jalan.kode, 

@@ -178,7 +178,19 @@ class AddSchema(colander.Schema):
                     #missing=colander.drop,
                     oid = "luas_max",
                     title = "Luas Max")
-    disabled      = colander.SchemaNode(
+    jenis_reklame_id  = colander.SchemaNode(
+                    colander.String(),
+                    default = 0,
+                    #missing=colander.drop,
+                    oid = "jenis_reklame_id",
+                    title = "Jenis Reklame")
+                     
+    jenis_reklame_nm  = colander.SchemaNode(
+                    colander.String(),
+                    #missing=colander.drop,
+                    oid = "jenis_reklame_nm",
+                    title = "Jenis Reklame")
+    status      = colander.SchemaNode(
                     colander.Integer(),
                     widget=deferred_status)
 
@@ -270,6 +282,7 @@ def view_edit(request):
     elif SESS_EDIT_FAILED in request.session:
         return session_failed(request, SESS_EDIT_FAILED)
     values = row.to_dict()
+    values['jenis_reklame_nm'] = row.jenis_reklame.nama
     form.set_appstruct(values)
     return dict(form=form)
 

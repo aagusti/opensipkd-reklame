@@ -8,11 +8,8 @@
         <tr>
             <th>ID</th>
             <th>Kode</th>
-            <th>Naskah</th>
-            <th>SKPD</th>
-            <th>Awal</th>
-            <th>Akhir</th>
-            <th>Jumlah Bayar</th>
+            <th>Nama</th>
+            <th>Tarif(%)</th>
             <th>Status</th>
         </tr>
     </thead>
@@ -22,12 +19,13 @@
 </div>
   <div metal:fill-slot="scripts">
     <script>
-      var listUrl = "/reklame/transaksi";
+      var listUrl = "/reklame/faktorlain";
       var mID;
       var mThn;
       var oTable;
       var iPos;
       var oTableUrl = listUrl+"/grid/act";
+        
       $(document).ready(function () {
         oTable = $('#table1').dataTable({
           "sDom"           : '<"toolbar">lfrtip',
@@ -48,30 +46,30 @@
               [10, 25, 50, 100]
           ],
           "aoColumnDefs": [
-            {
-                    "bSearchable": false,
-                    "bVisible"   : false,
-                    "aTargets"   : [0]
-                },{
-              "aTargets"   : [7], // Column number which needs to be modified
+		  {
+              "bSearchable": false,
+              "bVisible"   : false,
+              "aTargets"   : [0]
+          },{
+              "bSortable"  : false,
+              "aTargets"   : [2,3]
+          },{
+              "aTargets"   : [4], // Column number which needs to be modified
               "mRender"    : function (data, type, full) {
                   if (data == "0") {
-                      return 'N';
+                      return 'Disable';
                   } else if (data == "1") {
-                      return 'Y';
+                      return 'Aktif';
                   }
               }
           }
-            ],
+		  ],
           "aoColumns": [
               null,
-              {"width": "120px"},
+              {"width": "100px"},
+              {"width": "300px"},
               null,
-              {"width": "150px"},
-              {"width": "100px"},
-              {"width": "100px"},
-              {"width": "80px", "sClass": "right"},
-              {"width": "40px", "sClass": "center"},
+              {"width": "50px", "sClass": "center"},
           ]
         });
           
@@ -85,23 +83,7 @@
           '	&nbsp;',
           '</div>',
         ];
- 
-		// Pencarian Kondisi, ketika data yang dicari itu bukan dari data table
-/*        $('#table1_filter input').unbind();
-        $('#table1_filter input').bind('keyup', function(e) {
-            if(e.keyCode == 13) {
-                oTable.fnFilter(this.value);   
-            }else{
-                var existingString = $("#table1_filter input").val();
-                if (existingString.length > 1) {
-                    var oTableUrl1 = listUrl+"/grid1/act?cari="+existingString;
-                    oTable.fnReloadAjax(oTableUrl1);
-                }else{
-                    oTable.fnReloadAjax(oTableUrl);
-                }
-            }
-        });
-        */
+
         var tb = tb_array.join(' ');
         $("div.toolbar").html(tb);
         $("div.toolbar").attr('style', 'display:block; float: left; margin-bottom:6px; line-height:16px;');
@@ -136,15 +118,15 @@
         });
 
         $('#btn_print').click(function () {
-            url = '/reklame/opreklame/report/act/transaksi?transaksi_id='+mID
+            url = '/reklame/opreklame/report/act/nsr?nsr_id='+mID
 			
 			if (mID) window.open(url);
-            else window.open('/reklame/opreklame/report/act/transaksi2');
+            else window.open('/reklame/opreklame/report/act/nsr2');
             
         });
 
         $("#btn_close").click(function () {
-            window.location = '/reklame';
+            window.location = '/home';
             return false;
         });
         })

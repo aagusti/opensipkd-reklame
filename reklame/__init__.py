@@ -110,6 +110,10 @@ def main(global_config, **settings):
                           session_factory=session_factory)
     config.include('pyramid_beaker')                          
     config.include('pyramid_chameleon')
+    ############################################################################
+    config.include('pyramid_rpc.jsonrpc') # JSON RPC
+    #config.add_renderer('json', json_renderer)
+    ############################################################################
 
     authn_policy = AuthTktAuthenticationPolicy('sosecret',
                     callback=group_finder, hashalg='sha512')
@@ -130,6 +134,9 @@ def main(global_config, **settings):
         if route.nama:
             titles[route.kode] = ' - '.join([main_title, route.nama])     
             print route.kode, route.nama, route.path
+    
+    config.add_jsonrpc_endpoint('ws_reklame', '/ws/reklame') #, default_renderer="json")       
+    
     config.scan()
     
     app = config.make_wsgi_app()

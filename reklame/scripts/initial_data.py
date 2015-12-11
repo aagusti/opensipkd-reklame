@@ -21,6 +21,7 @@ from data.urusans import UrusanData
 from data.units import UnitData
 from data.jenis_reklame import JenisReklameData
 from data.jenis_nssr import JenisNssrData
+from data.faktor_lain import FaktorLainData
 
 from DbTools import (
     get_pkeys,
@@ -51,6 +52,7 @@ fixtures = [
     ('reklame.sudut_pandangs', SudutData),
     ('reklame.lokasi_pasangs', LokasiData),
     ('reklame.jenis_reklame', JenisReklameData),
+    ('reklame.faktor_lains', FaktorLainData),
     ('pemda.urusans', UrusanData),
     ('pemda.units', UnitData),
     ]

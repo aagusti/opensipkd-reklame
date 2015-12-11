@@ -400,22 +400,22 @@ class AddSchema(colander.Schema):
                     colander.Integer(),
                     missing=colander.drop,
                     oid="faktor_lain_id",
-                    default=0)
+                    default=1)
     faktor_lain_kd   = colander.SchemaNode(
-                    colander.Integer(),
+                    colander.String(),
                     missing=colander.drop,
                     oid="faktor_lain_kd",
-                    title="Faktor Lain",
-                    default=0)
+                    title="Faktor Lain")
     faktor_lain_nm   = colander.SchemaNode(
-                    colander.Integer(),
-                    missing=colander.drop,
+                    colander.String(),
+                    #missing=colander.drop,
                     oid="faktor_lain_nm",
                     title="Faktor Lain",
                     default=0)
     faktor_lain_ni   = colander.SchemaNode(
-                colander.Integer(),
-                missing=colander.drop,
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1, 'allowNegative':True}),
                 oid="faktor_lain_ni",
                 title="Persen",
                 default=0)

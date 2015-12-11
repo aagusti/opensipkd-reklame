@@ -52,7 +52,7 @@ def view_act(request):
         columns.append(ColumnDT('luas_min', filter=_DTnumberformat))
         columns.append(ColumnDT('luas_max', filter=_DTnumberformat))
         columns.append(ColumnDT('nilai',    filter=_DTnumberformat))
-        columns.append(ColumnDT('disabled'))
+        columns.append(ColumnDT('status'))
         
         query = DBSession.query(Nssr)
         rowTable = DataTables(req, Nssr, query, columns)

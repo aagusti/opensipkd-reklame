@@ -131,6 +131,14 @@ class Bahan(Base, osExtendModel):
     nilai          = Column(Float)
     disabled       = Column(SmallInteger, nullable=False, default=0)
 
+class FaktorLain(Base, osExtendModel):
+    __tablename__  = 'faktor_lains'
+    __table_args__ = {'extend_existing':True, 'schema' : 'reklame',}
+    tarif          = Column(Float, nullable=False, default=0,
+                        server_default='0')
+    status         = Column(SmallInteger, nullable=False, default=1,
+                        server_default='1')
+    
 ## Jenis / Nilai Sewa Reklame ##
 class JenisReklame(Base, osExtendModel):
     __tablename__  = 'jenis_reklame'
@@ -256,7 +264,7 @@ class Transaksi(Base, osExtendModel):
     npwpd          = Column(String(32))
     nama_wp        = Column(String(64))
     
-    #rekening_id      = Column(Integer, nullable=False)
+    faktor_lain_id   = Column(Integer, ForeignKey("reklame.faktor_lains.id") ,nullable=False,)
     jenis_reklame_id = Column(Integer, ForeignKey("reklame.jenis_reklame.id") ,nullable=False, )
     jenis_reklame_ni = Column(Float ,nullable=False, )
     njop             = Column(Float ,nullable=False, )
@@ -319,8 +327,9 @@ class Transaksi(Base, osExtendModel):
     # kelurahans     = relationship("Kelurahan",  backref=backref('reklames'))
     # jalans         = relationship("Jalan",      backref=backref('reklames'))
     kelas_jalans = relationship("KelasJalan",     backref=backref('reklames'))
-    jenis_nssr = relationship("JenisNssr",     backref=backref('reklames'))
-    lokasi_pasangs = relationship("Lokasi",     backref=backref('reklames'))
-    sudut_pandangs = relationship("Sudut",      backref=backref('reklames'))
-    ketinggians    = relationship("Ketinggian", backref=backref('reklames'))
+    jenis_nssr = relationship("JenisNssr",     backref=backref('transaksis'))
+    lokasi_pasangs = relationship("Lokasi",     backref=backref('transaksis'))
+    sudut_pandangs = relationship("Sudut",      backref=backref('transaksis'))
+    ketinggians    = relationship("Ketinggian", backref=backref('transaksis'))
+    faktor_lains    = relationship("FaktorLain", backref=backref('transaksis'))
        

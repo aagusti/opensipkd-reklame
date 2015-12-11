@@ -1,0 +1,4 @@
+id,kode,nama,nilai,status
+1,"001","Tidak Ada Faktor Lain",0,1
+2,"002","Rokok + 25%",25,1
+3,"003","Lembaga Pendidikan - 25%",-25,1

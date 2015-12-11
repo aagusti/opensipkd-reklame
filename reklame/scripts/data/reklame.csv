@@ -82,3 +82,8 @@ id,kode,path,nama,status
 30080,"reklame-jenis-nssr-add","/reklame/jenis-nssr/add","Tambah Jenis NSSR",1
 30081,"reklame-jenis-nssr-edit","/reklame/jenis-nssr/{id}/edit","Edit Jenis NSSR",1
 30082,"reklame-jenis-nssr-delete","/reklame/jenis-nssr/{id}/delete","Hapus Jenis NSSR",1
+30084,"reklame-faktorlain-act","/reklame/faktorlain/{act}/act","Baca Faktor Lain",2
+30085,"reklame-faktorlain-add","/reklame/faktorlain/add","Tambah Faktor Lain",1
+30083,"reklame-faktorlain","/reklame/faktorlain","Faktor Lain",1
+30086,"reklame-faktorlain-edit","/reklame/faktorlain/{id}/edit","Edit Faktor Lain",1
+30087,"reklame-faktorlain-delete","/reklame/faktorlain/{id}/delete","Hapus Faktor Lain",1

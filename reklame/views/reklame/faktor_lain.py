@@ -1,5 +1,5 @@
 from email.utils import parseaddr
-from sqlalchemy import not_
+from sqlalchemy import not_, or_
 from pyramid.view import (
     view_config,
     )
@@ -16,29 +16,29 @@ from ...models import(
     DBSession,
     )
 from ...models.reklame import (
-    Kecamatan, Kelurahan, Njop, KelasJalan, Jalan, Pemilik, Nssr, Rekening, Reklame, Transaksi
+    FaktorLain, Rekening
     )
 from datatables import ColumnDT, DataTables
 from datetime import datetime
 from ...tools import create_now,_DTnumberformat
 
-SESS_ADD_FAILED = 'Nilai Jual Objek Pajak Reklame add failed'
-SESS_EDIT_FAILED = 'Nilai Jual Objek Pajak Reklame edit failed'
+SESS_ADD_FAILED = 'faktorlain add failed'
+SESS_EDIT_FAILED = 'faktorlain edit failed'
 
 ########                    
 # List #
 ########    
-@view_config(route_name='reklame-njop', renderer='templates/njop/list.pt',
-             permission='reklame-njop')
+@view_config(route_name='reklame-faktorlain', renderer='templates/faktorlain/list.pt',
+             permission='reklame-faktorlain')
 def view_list(request):
-    return dict(project='Pajak Reklame')
+    return dict(project='TiRek')
     
 ##########                    
 # Action #
 ##########    
-@view_config(route_name='reklame-njop-act', renderer='json',
-             permission='reklame-njop-act')
-def view_act(request):
+@view_config(route_name='reklame-faktorlain-act', renderer='json',
+             permission='reklame-faktorlain-act')
+def faktorlain_act(request):
     ses = request.session
     req = request
     params = req.params
@@ -49,22 +49,20 @@ def view_act(request):
         columns.append(ColumnDT('id'))
         columns.append(ColumnDT('kode'))
         columns.append(ColumnDT('nama'))
-        columns.append(ColumnDT('luas_min', filter=_DTnumberformat))
-        columns.append(ColumnDT('luas_max', filter=_DTnumberformat))
-        columns.append(ColumnDT('nilai',    filter=_DTnumberformat))
+        columns.append(ColumnDT('tarif'))
         columns.append(ColumnDT('status'))
         
-        query = DBSession.query(Njop)
-        rowTable = DataTables(req, Njop, query, columns)
+        query = DBSession.query(FaktorLain)
+        rowTable = DataTables(req, FaktorLain, query, columns)
         return rowTable.output_result()
-        
+    
     elif url_dict['act']=='hon':
         term = 'term' in params and params['term'] or '' 
-        rows = DBSession.query(Njop.id, 
-                               Njop.kode, 
-                               Njop.nama, 
-                               Njop.nilai,
-                       ).filter(Njop.nama.ilike('%%%s%%' % term) 
+        rows = DBSession.query(FaktorLain.id, 
+                               FaktorLain.kode, 
+                               FaktorLain.nama,
+                               FaktorLain.tarif,
+                       ).filter(FaktorLain.nama.ilike('%%%s%%' % term) 
                        ).all()
         r = []
         for k in rows:
@@ -73,17 +71,17 @@ def view_act(request):
             d['value']   = k[2]
             d['kode']    = k[1]
             d['nama']    = k[2]
-            d['nilai']   = k[3]
+            d['tarif']    = k[3]
             r.append(d)
         return r   
            
     elif url_dict['act']=='hok':
         term = 'term' in params and params['term'] or '' 
-        rows = DBSession.query(Njop.id, 
-                               Njop.kode, 
-                               Njop.nama,
-                               Njop.nilai,
-                       ).filter(Njop.kode.ilike('%%%s%%' % term) 
+        rows = DBSession.query(FaktorLain.id, 
+                               FaktorLain.kode, 
+                               FaktorLain.nama,
+                               FaktorLain.tarif,
+                       ).filter(FaktorLain.kode.ilike('%%%s%%' % term) 
                        ).all()
         r = []
         for k in rows:
@@ -92,19 +90,10 @@ def view_act(request):
             d['value']   = k[1]
             d['kode']    = k[1]
             d['nama']    = k[2]
-            d['nilai']   = k[3]
+            d['tarif']    = k[3]
             r.append(d)
         return r    
-    elif url_dict['act']=='search':
-         items = dict(request.POST.items())
-         panjang = round('panjang' in items and float(items['panjang']) or 1.0)
-         lebar   = round('lebar' in items and float(items['lebar']) or 1.0)
-         row = Njop.search_by_luas(items['jenis_id'],panjang*lebar)
-         if row:
-            return {"value" : row.nilai}
-         else:
-            return  
-            
+        
 #######    
 # Add #
 #######
@@ -120,23 +109,23 @@ def form_validator(form, value):
                 
     if 'id' in form.request.matchdict:
         uid = form.request.matchdict['id']
-        q = DBSession.query(Njop).filter_by(id=uid)
-        strategis = q.first()
+        q = DBSession.query(FaktorLain).filter_by(id=uid)
+        nsr = q.first()
     else:
-        strategis = None
+        nsr = None
         
-    q = DBSession.query(Njop).filter_by(kode=value['kode'])
+    q = DBSession.query(FaktorLain).filter_by(kode=value['kode'])
     found = q.first()
-    if strategis:
-        if found and found.id != strategis.id:
+    if nsr:
+        if found and found.id != nsr.id:
             err_kode()
     elif found:
         err_kode()
         
     if 'nama' in value: # optional
-        found = Njop.get_by_nama(value['nama'])
-        if strategis:
-            if found and found.id != strategis.id:
+        found = FaktorLain.get_by_nama(value['nama'])
+        if nsr:
+            if found and found.id != nsr.id:
                 err_nama()
         elif found:
             err_nama()
@@ -147,40 +136,27 @@ def deferred_status(node, kw):
     return widget.SelectWidget(values=values)
     
 STATUS = (
-    (0, 'Inactive'),
     (1, 'Active'),
-    )   
+    (0, 'Inactive'),
+    )    
 
 class AddSchema(colander.Schema):
-    kode          = colander.SchemaNode(
-                    colander.String(),
-                    oid = "kode",
-                    title = "Kode",)
-    nama          = colander.SchemaNode(
-                    colander.String(),
-                    oid = "nama",
-                    title = "Uraian",)
-    nilai         = colander.SchemaNode(
-                    colander.Integer(),
-                    default = 0,
-                    #missing=colander.drop,
-                    oid = "nilai",
-                    title = "Nilai")
-    luas_min      = colander.SchemaNode(
-                    colander.Integer(),
-                    default = 0,
-                    #missing=colander.drop,
-                    oid = "luas_min",
-                    title = "Luas Min")
-    luas_max      = colander.SchemaNode(
-                    colander.Integer(),
-                    default = 0,
-                    #missing=colander.drop,
-                    oid = "luas_max",
-                    title = "Luas Max")
-    disabled      = colander.SchemaNode(
-                    colander.Integer(),
-                    widget=deferred_status)
+    kode            = colander.SchemaNode(
+                      colander.String(),
+                      oid = "kode",
+                      title = "Kode",)
+    nama            = colander.SchemaNode(
+                      colander.String(),
+                      oid = "nama",
+                      title = "Nama",)
+    tarif            = colander.SchemaNode(
+                      colander.Integer(),
+                      oid = "tarif",
+                      title = "Tarif",)
+    status        = colander.SchemaNode(
+                      colander.String(),
+                      widget=deferred_status,
+                      oid = "status",)
 
 class EditSchema(AddSchema):
     id = colander.SchemaNode(
@@ -193,10 +169,14 @@ def get_form(request, class_form):
     schema = schema.bind(daftar_status=STATUS)
     schema.request = request
     return Form(schema, buttons=('save','cancel'))
+
+def save_request1(row1=None):
+    row1 = Rekening()
+    return row1
     
 def save(values, user, row=None):
     if not row:
-        row = Njop()
+        row = FaktorLain()
         row.create_uid = user.id
         row.created    = datetime.now()
     else:
@@ -206,24 +186,25 @@ def save(values, user, row=None):
     row.from_dict(values)
     DBSession.add(row)
     DBSession.flush()
+    
     return row
     
 def save_request(values, request, row=None):
     if 'id' in request.matchdict:
         values['id'] = request.matchdict['id']
     row = save(values, request.user, row)
-    request.session.flash('Nilai Jual Objek Pajak Reklame %s sudah disimpan.' % row.nama)
+    request.session.flash('faktorlain reklame %s sudah disimpan.' % row.nama)
         
 def route_list(request):
-    return HTTPFound(location=request.route_url('reklame-njop'))
+    return HTTPFound(location=request.route_url('reklame-faktorlain'))
     
 def session_failed(request, session_name):
     r = dict(form=request.session[session_name])
     del request.session[session_name]
     return r
     
-@view_config(route_name='reklame-njop-add', renderer='templates/njop/add.pt',
-             permission='reklame-njop-add')
+@view_config(route_name='reklame-faktorlain-add', renderer='templates/faktorlain/add.pt',
+             permission='reklame-faktorlain-add')
 def view_add(request):
     form = get_form(request, AddSchema)
     if request.POST:
@@ -232,8 +213,9 @@ def view_add(request):
             try:
                 c = form.validate(controls)
             except ValidationFailure, e:
+                request.session.flash('Error Kode atau Nama','error')
                 return dict(form=form)				
-                return HTTPFound(location=request.route_url('reklame-njop-add'))
+                return HTTPFound(location=request.route_url('reklame-faktorlain-add'))
             save_request(dict(controls), request)
         return route_list(request)
     elif SESS_ADD_FAILED in request.session:
@@ -244,15 +226,15 @@ def view_add(request):
 # Edit #
 ########
 def query_id(request):
-    return DBSession.query(Njop).filter_by(id=request.matchdict['id'])
+    return DBSession.query(FaktorLain).filter_by(id=request.matchdict['id'])
     
 def id_not_found(request):    
-    msg = 'Nilai Jual Objek Pajak Reklame ID %s not found.' % request.matchdict['id']
+    msg = 'faktorlain reklame ID %s not found.' % request.matchdict['id']
     request.session.flash(msg, 'error')
     return route_list(request)
 
-@view_config(route_name='reklame-njop-edit', renderer='templates/njop/edit.pt',
-             permission='reklame-njop-edit')
+@view_config(route_name='reklame-faktorlain-edit', renderer='templates/faktorlain/edit.pt',
+             permission='reklame-faktorlain-edit')
 def view_edit(request):
     row = query_id(request).first()
     if not row:
@@ -276,8 +258,8 @@ def view_edit(request):
 ##########
 # Delete #
 ##########    
-@view_config(route_name='reklame-njop-delete', renderer='templates/njop/delete.pt',
-             permission='reklame-njop-delete')
+@view_config(route_name='reklame-faktorlain-delete', renderer='templates/faktorlain/delete.pt',
+             permission='reklame-faktorlain-delete')
 def view_delete(request):
     q = query_id(request)
     row = q.first()
@@ -289,9 +271,14 @@ def view_delete(request):
     form = Form(colander.Schema(), buttons=('hapus','batal'))
     if request.POST:
         if 'hapus' in request.POST:
-            msg = 'Nilai Jual Objek Pajak Reklame ID %d %s sudah dihapus.' % (row.id, row.nama)
-            q.delete()
-            DBSession.flush()
-            request.session.flash(msg)
+            try:
+                msg = 'faktorlain reklame ID %d %s sudah dihapus.' % (row.id, row.nama)
+                q.delete()
+                DBSession.flush()
+                request.session.flash(msg)
+            except ValidationFailure, e:
+                request.session.flash('Error saat menghapus data','error')
+                return dict(form=form)
+            #save_request(dict(controls), request, row)
         return route_list(request)
     return dict(row=row,form=form.render())

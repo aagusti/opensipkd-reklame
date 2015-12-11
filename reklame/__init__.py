@@ -56,6 +56,7 @@ class RemoveSlashNotFoundViewFactory(object):
         path = request.path
         registry = request.registry
         mapper = registry.queryUtility(IRoutesMapper)
+        
         if mapper is not None and path.endswith('/'):
             noslash_path = path.rstrip('/')
             for route in mapper.get_routes():
@@ -68,8 +69,6 @@ class RemoveSlashNotFoundViewFactory(object):
     
 # https://groups.google.com/forum/#!topic/pylons-discuss/QIj4G82j04c
 def has_permission_(request, permission):
-    print request, permission
-    print '-----------------------------------------'
     return has_permission(permission, request.context, request)
 
 @subscriber(BeforeRender)
@@ -133,8 +132,7 @@ def main(global_config, **settings):
         config.add_route(route.kode, route.path)
         if route.nama:
             titles[route.kode] = ' - '.join([main_title, route.nama])     
-            print route.kode, route.nama, route.path
-    
+            
     config.add_jsonrpc_endpoint('ws_reklame', '/ws/reklame') #, default_renderer="json")       
     
     config.scan()

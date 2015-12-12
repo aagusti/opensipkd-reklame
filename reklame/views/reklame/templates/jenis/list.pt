@@ -10,6 +10,7 @@
             <th>Kode</th>
             <th>Nama</th>
             <th>Rekening</th>
+            <th>Tarif (%)</th>
             <th>MasaPajak</th>
             <th>Status</th>
         </tr>
@@ -66,7 +67,7 @@
               "bSortable"  : false,
               "aTargets"   : [2,3]
           },{
-              "aTargets"   : [5], // Column number which needs to be modified
+              "aTargets"   : [6], // Column number which needs to be modified
               "mRender"    : function (data, type, full) {
                   if (data == "0") {
                       return 'Disable';
@@ -81,6 +82,7 @@
               {"width": "100px"},
               {"width": "300px"},
               null,
+              {"width": "50px"},
               {"width": "100px", "sClass": "center"},
               {"width": "50px", "sClass": "center"},
           ]

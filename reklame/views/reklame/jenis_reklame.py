@@ -50,6 +50,7 @@ def jenis_act(request):
         columns.append(ColumnDT('kode'))
         columns.append(ColumnDT('nama'))
         columns.append(ColumnDT('rekenings.nama'))
+        columns.append(ColumnDT('tarif'))
         columns.append(ColumnDT('masa_pajaks.nama'))
         columns.append(ColumnDT('status'))
         
@@ -101,7 +102,7 @@ def jenis_act(request):
             d['value']   = k[1]
             d['kode']    = k[1]
             d['nama']    = k[2]
-            d['tarif']    = k[2]
+            d['tarif']    = k[3]
             r.append(d)
         return r    
         
@@ -147,8 +148,8 @@ def deferred_status(node, kw):
     return widget.SelectWidget(values=values)
     
 STATUS = (
-    (0, 'Inactive'),
     (1, 'Active'),
+    (0, 'Inactive'),
     )    
 
 class AddSchema(colander.Schema):
@@ -169,6 +170,11 @@ class AddSchema(colander.Schema):
                       #missing=colander.drop,
                       oid="rekening_nm",
                       title="Rekening",)
+    tarif     = colander.SchemaNode(
+                      colander.Integer(),
+                      #missing=colander.drop,
+                      oid="tarif",
+                      title="Tarif",)
     masa_pajak_id     = colander.SchemaNode(
                       colander.Integer(),
                       oid="masa_pajak_id",
@@ -180,7 +186,8 @@ class AddSchema(colander.Schema):
                       title="Masa Pajak",)
     status        = colander.SchemaNode(
                       colander.Integer(),
-                      widget=deferred_status)
+                      widget=deferred_status,
+                      default=1)
 
 class EditSchema(AddSchema):
     id = colander.SchemaNode(

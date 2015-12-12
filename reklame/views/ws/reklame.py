@@ -70,7 +70,11 @@ def set_izin(request, data):
             row.lain           = 0
             row.jml_terhutang  = row.pokok+row.denda+row.bunga+row.kenaikan+row.lain-row.kompensasi
             row.status         = 1
-            row.kode = row.no_permohonan+str(row.id_permohonan).rjust(3,'0')
+            row.kode = "{no}-{id}".format(
+                          no = row.no_permohonan,
+                          id = str(row.id_permohonan).rjust(3,'0')
+                          )
+                          
             row.nama = r['naskah']
             row.nama_wp = row.nama_pemohon
             DBSession.add(row)

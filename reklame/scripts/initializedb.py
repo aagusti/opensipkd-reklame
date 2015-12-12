@@ -1,7 +1,7 @@
 import os
 import sys
+import subprocess
 import transaction
-from shutil import copyfile
 from sqlalchemy import (
     engine_from_config,
     select,
@@ -11,7 +11,6 @@ from pyramid.paster import (
     get_appsettings,
     setup_logging,
     )
-
 from ..models import (
     init_model,
     DBSession,
@@ -23,48 +22,6 @@ from ..models.pemda import *
     
 import initial_data
 from tools import mkdir
-
-
-ALEMBIC_CONF = """    
-[alembic]
-script_location = ziggurat_foundations:migrations
-sqlalchemy.url = {{db_url}}
-
-[loggers]
-keys = root,sqlalchemy,alembic
-
-[handlers]
-keys = console
-
-[formatters]
-keys = generic
-
-[logger_root]
-level = WARN
-handlers = console
-qualname =
-
-[logger_sqlalchemy]
-level = WARN
-handlers =
-qualname = sqlalchemy.engine
-
-[logger_alembic]
-level = INFO
-handlers =
-qualname = alembic
-
-[handler_console]
-class = StreamHandler
-args = (sys.stderr,)
-level = NOTSET
-formatter = generic
-
-[formatter_generic]
-format = %(levelname)-5.5s [%(name)s] %(message)s
-datefmt = %H:%M:%S
-"""    
-    
 
 
 def usage(argv):
@@ -91,20 +48,8 @@ def main(argv=sys.argv):
     config_uri = argv[1]
     setup_logging(config_uri)
     settings = get_appsettings(config_uri)
+    ziggurat_init(settings)    
     mkdir(settings['static_files'])
-    # Create Ziggurat tables
-    alembic_ini_file = 'alembic.ini'
-    if not os.path.exists(alembic_ini_file):
-        alembic_ini = ALEMBIC_CONF.replace('{{db_url}}',
-                                           settings['sqlalchemy.url'])
-        f = open(alembic_ini_file, 'w')
-        f.write(alembic_ini)
-        f.close()
-    bin_path = os.path.split(sys.executable)[0]
-    alembic_bin = os.path.join(bin_path, 'alembic')
-    command = '%s upgrade head' % alembic_bin
-    os.system(command)
-    os.remove(alembic_ini_file)
     # Insert data
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
@@ -113,3 +58,25 @@ def main(argv=sys.argv):
     Base.metadata.create_all(engine)
     initial_data.insert()
     transaction.commit()
+       
+def ziggurat_init(settings):
+    def alembic_run(ini_file):
+        s = read_file(ini_file)
+        s = s.replace('{{db_url}}', settings['sqlalchemy.url'])
+        f = open('alembic.ini', 'w')
+        f.write(s)
+        f.close()
+        subprocess.call(command)   
+        os.remove('alembic.ini') 
+
+    bin_path = os.path.split(sys.executable)[0]
+    alembic_bin = os.path.join(bin_path, 'alembic') 
+    command = (alembic_bin, 'upgrade', 'head')    
+    alembic_run('alembic.ini.tpl')
+    alembic_run('alembic_upgrade.ini.tpl')    
+    
+def read_file(filename):
+    f = open(filename)
+    s = f.read()
+    f.close()
+    return s    

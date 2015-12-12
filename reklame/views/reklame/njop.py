@@ -97,8 +97,8 @@ def view_act(request):
         return r    
     elif url_dict['act']=='search':
          items = dict(request.POST.items())
-         panjang = round('panjang' in items and float(items['panjang']) or 1.0)
-         lebar   = round('lebar' in items and float(items['lebar']) or 1.0)
+         panjang = 'panjang' in items and float(items['panjang']) or 1.0
+         lebar   = 'lebar' in items and float(items['lebar']) or 1.0
          row = Njop.search_by_luas(items['jenis_id'],panjang*lebar)
          if row:
             return {"value" : row.nilai}

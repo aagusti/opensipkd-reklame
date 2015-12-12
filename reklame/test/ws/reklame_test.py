@@ -11,7 +11,7 @@ pesan = argv[2]
 if argv[3:]:
     url = argv[3]
 else:
-    url = 'http://127.0.0.1:6543/ws'
+    url = 'http://127.0.0.1:6543/ws/reklame'
 if argv[5:]:
     username = argv[4]
     pass_encrypted = argv[5]

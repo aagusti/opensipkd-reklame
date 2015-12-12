@@ -9,8 +9,8 @@
             <th>ID</th>
             <th>Kode</th>
             <th>Nama</th>
-            <th>Rekening</th>
-            <th>MasaPajak</th>
+            <th>Pembagi</th>
+            <th>Acres(%)</th>
             <th>Status</th>
         </tr>
     </thead>
@@ -20,23 +20,12 @@
 </div>
   <div metal:fill-slot="scripts">
     <script>
-      var listUrl = "/reklame/jenis";
+      var listUrl = "/reklame/masapajak";
       var mID;
       var mThn;
       var oTable;
       var iPos;
       var oTableUrl = listUrl+"/grid/act";
-      Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
-        var n = this,
-            decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-            decSeparator = decSeparator == undefined ? "." : decSeparator,
-            thouSeparator = thouSeparator == undefined ? "," : thouSeparator,
-            sign = n < 0 ? "-" : "",
-            i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-            j = (j = i.length) > 3 ? j % 3 : 0;
-        return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
-      };
-
         
       $(document).ready(function () {
         oTable = $('#table1').dataTable({
@@ -63,8 +52,8 @@
               "bVisible"   : false,
               "aTargets"   : [0]
           },{
-              "bSortable"  : false,
-              "aTargets"   : [2,3]
+              "bSortable"  : true,
+              "aTargets"   : [1,2,3,4,5]
           },{
               "aTargets"   : [5], // Column number which needs to be modified
               "mRender"    : function (data, type, full) {
@@ -79,9 +68,9 @@
           "aoColumns": [
               null,
               {"width": "100px"},
-              {"width": "300px"},
               null,
-              {"width": "100px", "sClass": "center"},
+              {"width": "70px", "sClass": "right"},
+              {"width": "70px", "sClass": "right"},
               {"width": "50px", "sClass": "center"},
           ]
         });

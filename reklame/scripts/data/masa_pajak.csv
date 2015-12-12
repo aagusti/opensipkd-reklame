@@ -1,0 +1,7 @@
+id,kode,nama,pembagi,accres
+1,"tahun","Tahunan",1,0
+2,"semester","Semesteran",2,10
+3,"triwulan","Triwulanan",4,10
+4,"bulan","Bulanan",1,0
+5,"minggu","Mingguan",1,0
+6,"hari","Harian",1,0

@@ -245,6 +245,25 @@ class AddSchema(colander.Schema):
                     oid="jenis_reklame_ni",
                     title="NJOP",
                     default=1)
+    masa_pajak_id      = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="masa_pajak_id",
+                    missing=colander.drop)
+    masa_pajak_nm  = colander.SchemaNode(
+                    colander.String(),
+                    oid="masa_pajak_nm",
+                    title="Masa Pajak",)
+    pembagi        = colander.SchemaNode(
+                    colander.Decimal(),
+                    oid="pembagi",
+                    title="Pembagi",
+                    default=1.0)
+    accres        = colander.SchemaNode(
+                    colander.Integer(),
+                    oid="accres",
+                    title="Accres",
+                    default=0)
+                                    
     panjang       = colander.SchemaNode(
                     colander.Float(),
                     widget = widget.MoneyInputWidget(
@@ -259,6 +278,13 @@ class AddSchema(colander.Schema):
                     oid="lebar",
                     title="Lebar",
                     default=1.00)
+    luas          = colander.SchemaNode(
+                    colander.Float(),
+                    widget = widget.MoneyInputWidget(
+                                 options={'allowZero':True, 'precision':1}),
+                    oid="luas",
+                    title="Luas",
+                    default=1.00)
 
     muka          = colander.SchemaNode(
                     colander.Integer(),
@@ -268,21 +294,23 @@ class AddSchema(colander.Schema):
     jumlah_titik  = colander.SchemaNode(
                     colander.Integer(),
                     oid="jumlah_titik",
-                    title="Jumlah",
+                    title="Jml Titik",
                     default=1)
-    luas          = colander.SchemaNode(
+                    
+    jml_luas  = colander.SchemaNode(
                     colander.Float(),
                     widget = widget.MoneyInputWidget(
                                  options={'allowZero':True, 'precision':1}),
-                    oid="luas",
-                    title="Luas",
-                    default=1.00)
-    njop          = colander.SchemaNode(
+                    oid="jml_luas",
+                    title="Jml Luas",
+                    default=1)
+                    
+    nsr          = colander.SchemaNode(
                     colander.Float(),
                     widget = widget.MoneyInputWidget(
                                  options={'allowZero':True, 'precision':1}),
-                    oid="njop",
-                    title="Jml. NJOP")
+                    oid="nsr",
+                    title="Jml. NSR")
                     
     ketinggian_id   = colander.SchemaNode(
                     colander.String(),
@@ -329,12 +357,12 @@ class AddSchema(colander.Schema):
                                  options={'allowZero':True, 'precision':1}),
                     title="Nilai NSSR",
                     default = 0,)                    
-    nsr = colander.SchemaNode(
+    nssr = colander.SchemaNode(
                     colander.Float(),
                     widget = widget.MoneyInputWidget(
                                  options={'allowZero':True, 'precision':1}),
-                    oid="nsr",
-                    title="Jml. NSR",
+                    oid="nssr",
+                    title="Jml. NSSR",
                     default = 0,)  
     kelas_jalan_id = colander.SchemaNode(
                     colander.String(),
@@ -410,8 +438,7 @@ class AddSchema(colander.Schema):
                     colander.String(),
                     #missing=colander.drop,
                     oid="faktor_lain_nm",
-                    title="Faktor Lain",
-                    default=0)
+                    title="Faktor Lain")
     faktor_lain_ni   = colander.SchemaNode(
                     colander.Float(),
                     widget = widget.MoneyInputWidget(
@@ -481,9 +508,11 @@ class AddSchema(colander.Schema):
     no_bayar      = colander.SchemaNode(
                     colander.String(),
                     oid="no_bayar",
+                    missing=colander.drop,
                     title="No.Bayar")
     tgl_bayar     = colander.SchemaNode(
                     colander.Date(),
+                    missing=colander.drop,
                     oid="tgl_bayar",
                     title="Tanggal")
 
@@ -663,6 +692,9 @@ def view_edit(request):
     values['sudut_pandang_kd'] = row.sudut_pandangs and row.sudut_pandangs.kode or ''
     values['lokasi_pasang_nm'] = row.lokasi_pasangs and row.lokasi_pasangs.nama or ''
     values['lokasi_pasang_kd'] = row.lokasi_pasangs and row.lokasi_pasangs.kode or ''
+    values['faktor_lain_nm'] = row.faktor_lains and row.faktor_lains.nama or ''
+    values['faktor_lain_kd'] = row.faktor_lains and row.faktor_lains.kode or ''
+    values['masa_pajak_nm'] = row.masa_pajaks and row.masa_pajaks.nama or ''
     
     form.set_appstruct(values)
     return dict(form=form)

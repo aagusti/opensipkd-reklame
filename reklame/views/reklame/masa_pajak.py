@@ -16,28 +16,28 @@ from ...models import(
     DBSession,
     )
 from ...models.reklame import (
-    JenisReklame, Rekening, MasaPajak
+    MasaPajak
     )
 from datatables import ColumnDT, DataTables
 from datetime import datetime
 from ...tools import create_now,_DTnumberformat
 
-SESS_ADD_FAILED = 'Jenis add failed'
-SESS_EDIT_FAILED = 'Jenis edit failed'
+SESS_ADD_FAILED = 'Masa Pajak add failed'
+SESS_EDIT_FAILED = 'Masa Pajak edit failed'
 
 ########                    
 # List #
 ########    
-@view_config(route_name='reklame-jenis', renderer='templates/jenis/list.pt',
-             permission='reklame-jenis')
+@view_config(route_name='reklame-masapajak', renderer='templates/masapajak/list.pt',
+             permission='reklame-masapajak')
 def view_list(request):
     return dict(project='Pajak Reklame')
     
 ##########                    
 # Action #
 ##########    
-@view_config(route_name='reklame-jenis-act', renderer='json',
-             permission='reklame-jenis-act')
+@view_config(route_name='reklame-masapajak-act', renderer='json',
+             permission='reklame-masapajak')
 def jenis_act(request):
     ses = request.session
     req = request
@@ -49,50 +49,43 @@ def jenis_act(request):
         columns.append(ColumnDT('id'))
         columns.append(ColumnDT('kode'))
         columns.append(ColumnDT('nama'))
-        columns.append(ColumnDT('rekenings.nama'))
-        columns.append(ColumnDT('masa_pajaks.nama'))
+        columns.append(ColumnDT('pembagi'))
+        columns.append(ColumnDT('accres'))
         columns.append(ColumnDT('status'))
         
-        query = DBSession.query(JenisReklame)
-        rowTable = DataTables(req, JenisReklame, query, columns)
+        query = DBSession.query(MasaPajak)
+        rowTable = DataTables(req, MasaPajak, query, columns)
         return rowTable.output_result()
     
     elif url_dict['act']=='hon':
         term = 'term' in params and params['term'] or '' 
-        rows = DBSession.query(JenisReklame.id, 
-                               JenisReklame.kode, 
-                               JenisReklame.nama,
-                               JenisReklame.tarif,
-                               JenisReklame.masa_pajak_id,
-                               MasaPajak.nama.label('masa_pajak_nm'),
+        rows = DBSession.query(MasaPajak.id, 
+                               MasaPajak.kode, 
+                               MasaPajak.nama,
                                MasaPajak.pembagi,
                                MasaPajak.accres,
-                               
-                       ).filter(JenisReklame.nama.ilike('%%%s%%' % term) ,
-                          JenisReklame.masa_pajak_id==MasaPajak.id
+                       ).filter(MasaPajak.nama.ilike('%%%s%%' % term) 
                        ).all()
         r = []
         for k in rows:
             d={}
-            d['id']            = k[0]
-            d['value']         = k[2]
-            d['kode']          = k[1]
-            d['nama']          = k[2]
-            d['tarif']         = k[3]
-            d['masa_pajak_id'] = k[4]
-            d['masa_pajak_nm'] = k[5]
-            d['pembagi']       = k[6]
-            d['accres']        = k[7]
+            d['id']      = k[0]
+            d['value']   = k[2]
+            d['kode']    = k[1]
+            d['nama']    = k[2]
+            d['pembagi'] = k[3]
+            d['accres']  = k[4]
             r.append(d)
         return r   
            
     elif url_dict['act']=='hok':
         term = 'term' in params and params['term'] or '' 
-        rows = DBSession.query(JenisReklame.id, 
-                               JenisReklame.kode, 
-                               JenisReklame.nama,
-                               JenisReklame.tarif,
-                       ).filter(JenisReklame.kode.ilike('%%%s%%' % term) 
+        rows = DBSession.query(MasaPajak.id, 
+                               MasaPajak.kode, 
+                               MasaPajak.nama,
+                               MasaPajak.pembagi,
+                               MasaPajak.accres,
+                       ).filter(MasaPajak.kode.ilike('%%%s%%' % term) 
                        ).all()
         r = []
         for k in rows:
@@ -101,7 +94,8 @@ def jenis_act(request):
             d['value']   = k[1]
             d['kode']    = k[1]
             d['nama']    = k[2]
-            d['tarif']    = k[2]
+            d['pembagi'] = k[3]
+            d['accres']  = k[4]
             r.append(d)
         return r    
         
@@ -120,12 +114,12 @@ def form_validator(form, value):
                 
     if 'id' in form.request.matchdict:
         uid = form.request.matchdict['id']
-        q = DBSession.query(JenisReklame).filter_by(id=uid)
+        q = DBSession.query(MasaPajak).filter_by(id=uid)
         nsr = q.first()
     else:
         nsr = None
         
-    q = DBSession.query(JenisReklame).filter_by(kode=value['kode'])
+    q = DBSession.query(MasaPajak).filter_by(kode=value['kode'])
     found = q.first()
     if nsr:
         if found and found.id != nsr.id:
@@ -134,7 +128,7 @@ def form_validator(form, value):
         err_kode()
         
     if 'nama' in value: # optional
-        found = JenisReklame.get_by_nama(value['nama'])
+        found = MasaPajak.get_by_nama(value['nama'])
         if nsr:
             if found and found.id != nsr.id:
                 err_nama()
@@ -160,24 +154,14 @@ class AddSchema(colander.Schema):
                       colander.String(),
                       oid = "nama",
                       title = "Nama",)
-    rekening_id     = colander.SchemaNode(
-                      colander.Integer(),
-                      oid="rekening_id",
-                      missing=colander.drop)
-    rekening_nm     = colander.SchemaNode(
+    pembagi         = colander.SchemaNode(
                       colander.String(),
-                      #missing=colander.drop,
-                      oid="rekening_nm",
-                      title="Rekening",)
-    masa_pajak_id     = colander.SchemaNode(
+                      oid = "pembagi",
+                      title = "Pembagi",)
+    accres            = colander.SchemaNode(
                       colander.Integer(),
-                      oid="masa_pajak_id",
-                      missing=colander.drop)
-    masa_pajak_nm     = colander.SchemaNode(
-                      colander.String(),
-                      #missing=colander.drop,
-                      oid="masa_pajak_nm",
-                      title="Masa Pajak",)
+                      oid = "accres",
+                      title = "Accres",)    
     status        = colander.SchemaNode(
                       colander.Integer(),
                       widget=deferred_status)
@@ -194,13 +178,9 @@ def get_form(request, class_form):
     schema.request = request
     return Form(schema, buttons=('save','cancel'))
 
-def save_request1(row1=None):
-    row1 = Rekening()
-    return row1
-    
 def save(values, user, row=None):
     if not row:
-        row = JenisReklame()
+        row = MasaPajak()
         row.create_uid = user.id
         row.created    = datetime.now()
     else:
@@ -210,13 +190,7 @@ def save(values, user, row=None):
     row.from_dict(values)
     DBSession.add(row)
     DBSession.flush()
-    
-    #Untuk update disabled pada Rekening
-    #a = row.rekening_id
-    #row1 = DBSession.query(Rekening).filter(Rekening.id==a).first()   
-    #row1.status=1
-    #save_request1(row1)
-    
+   
     return row
     
 def save_request(values, request, row=None):
@@ -226,15 +200,15 @@ def save_request(values, request, row=None):
     request.session.flash('Jenis reklame %s sudah disimpan.' % row.nama)
         
 def route_list(request):
-    return HTTPFound(location=request.route_url('reklame-jenis'))
+    return HTTPFound(location=request.route_url('reklame-masapajak'))
     
 def session_failed(request, session_name):
     r = dict(form=request.session[session_name])
     del request.session[session_name]
     return r
     
-@view_config(route_name='reklame-jenis-add', renderer='templates/jenis/add.pt',
-             permission='reklame-jenis-add')
+@view_config(route_name='reklame-masapajak-add', renderer='templates/masapajak/add.pt',
+             permission='reklame-masapajak-add')
 def view_add(request):
     form = get_form(request, AddSchema)
     if request.POST:
@@ -244,7 +218,7 @@ def view_add(request):
                 c = form.validate(controls)
             except ValidationFailure, e:
                 return dict(form=form)				
-                return HTTPFound(location=request.route_url('reklame-jenis-add'))
+                return HTTPFound(location=request.route_url('reklame-masapajak-add'))
             save_request(dict(controls), request)
         return route_list(request)
     elif SESS_ADD_FAILED in request.session:
@@ -255,15 +229,15 @@ def view_add(request):
 # Edit #
 ########
 def query_id(request):
-    return DBSession.query(JenisReklame).filter_by(id=request.matchdict['id'])
+    return DBSession.query(MasaPajak).filter_by(id=request.matchdict['id'])
     
 def id_not_found(request):    
     msg = 'Jenis reklame ID %s not found.' % request.matchdict['id']
     request.session.flash(msg, 'error')
     return route_list(request)
 
-@view_config(route_name='reklame-jenis-edit', renderer='templates/jenis/edit.pt',
-             permission='reklame-jenis-edit')
+@view_config(route_name='reklame-masapajak-edit', renderer='templates/masapajak/edit.pt',
+             permission='reklame-masapajak-edit')
 def view_edit(request):
     row = query_id(request).first()
     if not row:
@@ -281,18 +255,14 @@ def view_edit(request):
     elif SESS_EDIT_FAILED in request.session:
         return session_failed(request, SESS_EDIT_FAILED)
     values = row.to_dict()
-    values['rekening_id'] = row and row.rekening_id    or 0
-    values['rekening_nm'] = row and row.rekenings.nama or ''
-    values['masa_pajak_id'] = row and row.masa_pajak_id    or 0
-    values['masa_pajak_nm'] = row and row.masa_pajaks.nama or ''
     form.set_appstruct(values)
     return dict(form=form)
 
 ##########
 # Delete #
 ##########    
-@view_config(route_name='reklame-jenis-delete', renderer='templates/jenis/delete.pt',
-             permission='reklame-jenis-delete')
+@view_config(route_name='reklame-masapajak-delete', renderer='templates/masapajak/delete.pt',
+             permission='reklame-masapajak-delete')
 def view_delete(request):
     q = query_id(request)
     row = q.first()

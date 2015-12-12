@@ -35,7 +35,7 @@
             </div>
         </div>
     </div>
-	<div class="form-group">
+    <div class="form-group">
         <div tal:define="field form['no_permohonan']" id="item-${field.oid}">
             <label for="${field.oid}" class="control-label col-md-1" id="req-${field.oid}">
                     ${field.title}</label>
@@ -181,21 +181,7 @@
     </div>
 
     <hr>
-
-	<div class="form-group">
-        <div tal:define="field form['jenis_reklame_id']" style="display: none;">
-              ${structure:field.serialize()}
-        </div>
-        <div tal:define="field form['jenis_reklame_nm']" id="item-${field.oid}">
-            <label for="${field.oid}" class="control-label col-md-1" id="req-${field.oid}">
-                    ${field.title}</label>
-            <div class="col-md-4">
-               ${structure:field.serialize()}
-                <p id="error-${field.oid}" class="help-block" tal:condition="field.error"
-                   tal:repeat="error field.error.messages()">
-                   ${error}</p>
-            </div>
-        </div>
+    <div class="form-group">
         <div tal:define="field form['panjang']" id="item-${field.oid}">
             <label for="${field.oid}" class="control-label col-md-1" id="req-${field.oid}">
                     ${field.title}</label>
@@ -216,23 +202,19 @@
                    ${error}</p>
             </div>
         </div>
-
-        
-        <div tal:define="field form['jenis_reklame_ni']" id="item-${field.oid}">
+        <div tal:define="field form['luas']" id="item-${field.oid}">
             <label for="${field.oid}" class="control-label col-md-1" id="req-${field.oid}">
                     ${field.title}</label>
-            <div class="col-md-2">
+            <div class="col-md-1">
                ${structure:field.serialize()}
                 <p id="error-${field.oid}" class="help-block" tal:condition="field.error"
                    tal:repeat="error field.error.messages()">
                    ${error}</p>
             </div>
         </div>
-    </div>
-    <div class="form-group">
-
+        
         <div tal:define="field form['muka']" id="item-${field.oid}">
-            <label for="${field.oid}" class="control-label col-md-4" id="req-${field.oid}">
+            <label for="${field.oid}" class="control-label col-md-1" id="req-${field.oid}">
                     ${field.title}</label>
             <div class="col-md-1">
                ${structure:field.serialize()}
@@ -251,7 +233,7 @@
                    ${error}</p>
             </div>
         </div>
-        <div tal:define="field form['luas']" id="item-${field.oid}">
+        <div tal:define="field form['jml_luas']" id="item-${field.oid}">
             <label for="${field.oid}" class="control-label col-md-1" id="req-${field.oid}">
                     ${field.title}</label>
             <div class="col-md-1">
@@ -261,8 +243,25 @@
                    ${error}</p>
             </div>
         </div>
-        <div tal:define="field form['njop']" id="item-${field.oid}">
+    </div>
+
+	<div class="form-group">
+        <div tal:define="field form['jenis_reklame_id']" style="display: none;">
+              ${structure:field.serialize()}
+        </div>
+        <div tal:define="field form['jenis_reklame_nm']" id="item-${field.oid}">
             <label for="${field.oid}" class="control-label col-md-1" id="req-${field.oid}">
+                    ${field.title}</label>
+            <div class="col-md-4">
+               ${structure:field.serialize()}
+                <p id="error-${field.oid}" class="help-block" tal:condition="field.error"
+                   tal:repeat="error field.error.messages()">
+                   ${error}</p>
+            </div>
+        </div>
+        
+        <div tal:define="field form['jenis_reklame_ni']" id="item-${field.oid}">
+            <label for="${field.oid}" class="control-label col-md-5" id="req-${field.oid}">
                     ${field.title}</label>
             <div class="col-md-2">
                ${structure:field.serialize()}
@@ -271,7 +270,6 @@
                    ${error}</p>
             </div>
         </div>
-        
     </div>
     <div class="form-group">
         <div tal:define="field form['ketinggian_id']" style="display: none;">
@@ -377,7 +375,7 @@
             </div>
         </div>
         
-        <div tal:define="field form['nsr']" id="item-${field.oid}">
+        <div tal:define="field form['nssr']" id="item-${field.oid}">
             <label for="${field.oid}" class="control-label col-md-1" id="req-${field.oid}">
                     ${field.title}</label>
             <div class="col-md-2">
@@ -392,7 +390,7 @@
     KELAS JALAN
     #############################################################################################-->
     <div class="form-group">
-        <div tal:define="field form['kelas_jalan_id']" style="display: none;">
+    <div tal:define="field form['kelas_jalan_id']" style="display: none;">
               ${structure:field.serialize()}
         </div>
         <div tal:define="field form['kelas_jalan_kd']" id="item-${field.oid}">
@@ -501,6 +499,16 @@
                    ${error}</p>
             </div>
         </div>
+        <div tal:define="field form['nsr']" id="item-${field.oid}">
+            <label for="${field.oid}" class="control-label col-md-2" id="req-${field.oid}">
+                    ${field.title}</label>
+            <div class="col-md-2">
+               ${structure:field.serialize()}
+                <p id="error-${field.oid}" class="help-block" tal:condition="field.error"
+                   tal:repeat="error field.error.messages()">
+                   ${error}</p>
+            </div>
+        </div>
         
     </div>
 <!--#########################################################################################
@@ -593,6 +601,7 @@
     PERHITUNGAN 1
     #############################################################################################-->
     <div class="form-group">
+        
         <div tal:define="field form['dasar']" id="item-${field.oid}">
             <label for="${field.oid}" class="control-label col-md-1" id="req-${field.oid}">
                     ${field.title}</label>
@@ -730,12 +739,33 @@
       <button id="deformcancel" name="batal" type="submit" class="btn btn-danger "
             value="batal">Batal</button>
     </div>
-   
+    
 </form>
 </div>
 </div>
 <script>
 $(document).ready(function(){
+  $('#panjang,#lebar').blur(function(){
+        jmlLuas();
+        searchNJOP();
+        searchNSSR();
+  });
+  
+  function jmlLuas(){
+    $('#luas').val($.formatNumber(
+                $.parseNumber($('#panjang').val())*$.parseNumber($('#lebar').val())
+                ,{format:"#,##0.0"}));
+    jmlTotLuas();
+  }
+  
+  function jmlTotLuas(){
+    $('#jml_luas').val($.formatNumber(
+                $.parseNumber($('#panjang').val())*$.parseNumber($('#lebar').val())*
+                $.parseNumber($('#muka').val())*$.parseNumber($('#jumlah_titik').val())
+                ,{format:"#,##0.0"}));
+    jmlDasar();
+  }
+  
   function jmlPokok(){
     $('#pokok').val($.formatNumber($.parseNumber($('#dasar').val())*
                         $.parseNumber($('#tarif').val())/100,{format:"#,##0.0"}));
@@ -752,10 +782,17 @@ $(document).ready(function(){
                 ,{format:"#,##0.0"}));
     }
     
+  function jmlNSR(){
+    $('#nsr').val($.formatNumber($.parseNumber($('#jenis_reklame_ni').val())+
+                        $.parseNumber($('#nssr').val())+
+                        $.parseNumber($('#jml_ketinggian').val())
+                        ,{format:"#,##0.0"}));
+    jmlDasar();
+    }
+    
   function jmlDasar(){
-    $('#dasar').val($.formatNumber($.parseNumber($('#njop').val())+
-                        $.parseNumber($('#jml_ketinggian').val())+
-                        $.parseNumber($('#nsr').val()),{format:"#,##0.0"}));
+    $('#dasar').val($.formatNumber($.parseNumber($('#nsr').val())*
+                        $.parseNumber($('#jml_luas').val()),{format:"#,##0.0"}));
     jmlPokok();
     }
 
@@ -768,26 +805,11 @@ $(document).ready(function(){
     if (val_ni>0)
         $('#kenaikan').val($.formatNumber(val_ni,{format:"#,##0.0"}));
     else 
-        $('#kompensasi').val($.formatNumber(abs(val_ni),{format:"#,##0.0"}));
+        $('#kompensasi').val($.formatNumber(Math.abs(val_ni),{format:"#,##0.0"}));
     jmlTerhutang();
   }
   
   
-  function jmlLuas(){
-    $('#luas').val($.formatNumber(
-                $.parseNumber($('#panjang').val())*$.parseNumber($('#lebar').val())*
-                $.parseNumber($('#muka').val())*$.parseNumber($('#jumlah_titik').val())
-                ,{format:"#,##0.0"}));
-    jmlDasar();
-  }
-  
-  function jmlNJOP(){
-      $('#njop').val($.formatNumber(
-               Math.round($.parseNumber($('#jenis_reklame_ni').val())*$.parseNumber($('#luas').val()))
-               ,{format:"#,##0.0"}));
-      jmlDasar();
-  }
-
   function searchNJOP(){
       $.ajax({
           type: "POST",
@@ -801,14 +823,15 @@ $(document).ready(function(){
           if (data!=null)
                 $('#jenis_reklame_ni').val($.formatNumber(data.value,{format:"#,##0.0"})) ;
         });
-      jmlNJOP();
-      jmlLuas();
+      jmlNSR();
+      //jmlLuas();
   }
+  
   function jmlKetinggian(){
     $('#jml_ketinggian').val($.formatNumber(
                 $.parseNumber($('#tinggi').val())*$.parseNumber($('#ketinggian_ni').val())
                 ,{format:"#,##0.0"}));
-    jmlNJOP();
+    jmlNSR();
   }        
   //*********************************************************************************************//
   //JENIS_REKLAME
@@ -829,14 +852,9 @@ $(document).ready(function(){
         searchNJOP()
   });
   
-  $('#panjang,#lebar').blur(function(){
-        jmlLuas();
-        searchNJOP();
-        searchNSSR();
-  });
   
   $('#muka,#jumlah_titik').blur(function(){
-        jmlLuas();
+        jmlTotLuas();
   }); 
   
   //*********************************************************************************************//
@@ -866,14 +884,15 @@ $(document).ready(function(){
   //*********************************************************************************************//
   //NSSR
   //*********************************************************************************************//
-  function jmlNSR(){
-     $('#nsr').val($.formatNumber($.parseNumber($('#nssr_ni').val())*(
+  function jmlNSSR(){
+     $('#nssr').val($.formatNumber($.parseNumber($('#nssr_ni').val())*(
                    $.parseNumber($('#kelas_jalan_ni').val())+
                    $.parseNumber($('#lokasi_pasang_ni').val())+
                    $.parseNumber($('#sudut_pandang_ni').val())),{format:"#,##0.0"}));
-     jmlDasar();
+     jmlNSR();
   };
 
+  
   function searchNSSR(){
       $.ajax({
           type: "POST",
@@ -887,7 +906,7 @@ $(document).ready(function(){
           if (data!=null)
                 $('#nssr_ni').val($.formatNumber(data.value,{format:"#,##0.0"}));
         });
-      jmlNSR();
+      jmlNSSR();
   }
 
   $('#nssr_nm').typeahead({
@@ -924,7 +943,7 @@ $(document).ready(function(){
         $('#kelas_jalan_id').val(datum.id);
         $('#kelas_jalan_kd').val(datum.kode);
         $('#kelas_jalan_ni').val($.formatNumber(datum.nilai,{format:"#,##0.0"}));
-        jmlNSR();
+        jmlNSSR();
   });
 
   //*********************************************************************************************//
@@ -944,7 +963,7 @@ $(document).ready(function(){
         $('#sudut_pandang_id').val(datum.id);
         $('#sudut_pandang_ni').val($.formatNumber(datum.nilai,{format:"#,##0.0"}));
         $('#sudut_pandang_kd').val(datum.kode);
-        jmlNSR();
+        jmlNSSR();
   });
 
 
@@ -965,12 +984,12 @@ $(document).ready(function(){
         $('#lokasi_pasang_id').val(datum.id);
         $('#lokasi_pasang_kd').val(datum.kode);
         $('#lokasi_pasang_ni').val($.formatNumber(datum.nilai,{format:"#,##0.0"}));
-        jmlNSR();
+        jmlNSSR();
   });
 
 
   //*********************************************************************************************//
-  //lokasi
+  //Faktor Lain
   //*********************************************************************************************//
   $('#faktor_lain_nm').typeahead({
        "hint"     : true,
@@ -999,9 +1018,9 @@ $(document).ready(function(){
   //init
   //searchNJOP();
   //jmlKetinggian();
-  $("#luas,#jenis_reklame_ni,#njop").attr('readonly',true);
+  $("#luas,#jml_luas,#jenis_reklame_ni,#njop").attr('readonly',true);
   $("#dasar,#tarif,#pokok,#jml_terhutang").attr('readonly',true);
-  $("#nssr_kd,#nssr_ni,#nsr,#kelas_jalan_kd,#kelas_jalan_ni").attr('readonly',true);
+  $("#nssr_kd,#nssr_ni,#nssr,#kelas_jalan_kd,#kelas_jalan_ni").attr('readonly',true);
   $("#lokasi_pasang_kd, #lokasi_pasang_ni,#ketinggian_ni,#jml_ketinggian").attr('readonly',true);     
   $("#sudut_pandang_ni,#sudut_pandang_kd").attr('readonly',true);     
   $("#faktor_lain_kd,#faktor_lain_kd,#faktor_lain_ni").attr('readonly',true);     

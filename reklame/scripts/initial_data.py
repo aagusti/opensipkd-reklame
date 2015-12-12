@@ -7,21 +7,13 @@ from sqlalchemy import (
     )
 from data.user import UserData
 from data.routes import RouteData
-from data.reklame import ReklameData
-from data.kls_jln import KelasJalanData
-from data.jln import JalanData
-from data.rekenings import RekeningData
-from data.ketinggians import KetinggianData
-from data.nssr import StrategisData
-from data.njop import NjopData
-from data.nsr import NilaiSewaData
-from data.sudut import SudutData
-from data.lokasi import LokasiData
-from data.urusans import UrusanData
-from data.units import UnitData
-from data.jenis_reklame import JenisReklameData
-from data.jenis_nssr import JenisNssrData
-from data.faktor_lain import FaktorLainData
+from data.pemda import RekeningData,UrusanData, UnitData
+
+from data.reklame import (ReklameData, KelasJalanData, JalanData,
+                           StrategisData, NjopData, NilaiSewaData,
+                          SudutData, LokasiData, KetinggianData, 
+                          JenisReklameData, JenisNssrData, FaktorLainData,
+                          MasaPajakData)
 
 from DbTools import (
     get_pkeys,
@@ -41,9 +33,12 @@ fixtures = [
     ('users', UserData),
     ('routes', RouteData),
     ('routes', ReklameData),
+    ('pemda.urusans', UrusanData),
+    ('pemda.units', UnitData),
+    ('reklame.rekenings', RekeningData),
     ('reklame.kelas_jalans', KelasJalanData),
     ('reklame.jalans', JalanData),
-    ('reklame.rekenings', RekeningData),
+    ('reklame.masa_pajaks',MasaPajakData),
     ('reklame.ketinggians', KetinggianData),
     ('reklame.jenis', NilaiSewaData),
     ('reklame.jenis_nssr', JenisNssrData),
@@ -53,8 +48,6 @@ fixtures = [
     ('reklame.sudut_pandangs', SudutData),
     ('reklame.lokasi_pasangs', LokasiData),
     ('reklame.faktor_lains', FaktorLainData),
-    ('pemda.urusans', UrusanData),
-    ('pemda.units', UnitData),
     ]
 
 def insert():

@@ -11,8 +11,8 @@ def set_izin(request, data):
     resp,user = auth_from_rpc(request)
     if resp['code'] != 0:
         return resp
-    try:
-    #if 1==1:
+    #try:
+    if 1==1:
         ret_data =[]
         for r in data:
             if int(r['command'])==1:
@@ -30,28 +30,38 @@ def set_izin(request, data):
                 return dict(code=CODE_DATA_INVALID, message='Data Invalid')
                 
             row.from_dict(r)
-            luas = row.panjang * row.lebar
-            row.luas            = luas*row.muka*row.jumlah_titik
-            row.jenis_reklame_ni= Njop.search_by_luas(
-                                    row.jenis_reklame_id , luas).nilai
-            row.njop            = round(row.jenis_reklame_ni*row.luas)
+            row.luas = row.panjang * row.lebar
+            row.jml_luas         = row.luas*row.muka*row.jumlah_titik
+            
+            tmp_row           = JenisReklame.get_by_id(row.jenis_reklame_id)
+            row.masa_pajak_id = tmp_row.masa_pajaks.id
+            row.pembagi       = tmp_row.masa_pajaks.pembagi
+            row.accres        = tmp_row.masa_pajaks.accres
+            
+            row.jenis_reklame_ni = Njop.search_by_luas(
+                                    row.jenis_reklame_id, row.luas).nilai
+            
+            row.jenis_reklame_ni = Njop.search_by_luas(
+                                    row.jenis_reklame_id, row.luas).nilai
             row.ketinggian_ni    = Ketinggian.get_by_id(row.ketinggian_id).nilai
             row.jml_ketinggian   = round(row.tinggi*row.ketinggian_ni)
-            row.nssr_ni          = Nssr.search_by_luas(
-                                            row.jenis_nssr_id , luas).nilai
+            row.nssr_ni          = Nssr.search_by_luas(row.jenis_nssr_id,row.luas).nilai
             row.kelas_jalan_ni   = KelasJalan.get_by_id(row.kelas_jalan_id).nilai
-            row.sudut_pandang_ni = Sudut.get_by_id(
-                                            row.sudut_pandang_id).nilai
-            row.lokasi_pasang_ni = Lokasi.get_by_id(
-                                            row.lokasi_pasang_id).nilai
-            row.nsr              = round((row.kelas_jalan_ni
-                                            +row.sudut_pandang_ni
-                                            +row.lokasi_pasang_ni)*row.nssr_ni)
-            row.faktor_lain_ni   = Lokasi.get_by_id(
-                                            row.faktor_lain_id).nilai
-            row.dasar          = row.njop+row.nsr+row.jml_ketinggian
-            row.tarif          = JenisReklame.get_by_id(
-                                    row.jenis_reklame_id).tarif
+            row.sudut_pandang_ni = Sudut.get_by_id(row.sudut_pandang_id).nilai
+            row.lokasi_pasang_ni = Lokasi.get_by_id(row.lokasi_pasang_id).nilai
+            row.nssr             = (row.kelas_jalan_ni+row.sudut_pandang_ni
+                                   +row.lokasi_pasang_ni)*row.nssr_ni
+                                            
+            row.faktor_lain_ni   = FaktorLain.get_by_id(row.faktor_lain_id).tarif
+                                            
+            row.nsr            = row.jenis_reklame_ni+row.nssr+row.jml_ketinggian
+            if row.pembagi>1:
+                row.nsr = round(row.nsr/row.pembagi)
+            if row.accres>0:
+                row.nsr = round(row.nsr + row.accres*row.nsr/100)
+                
+            row.dasar          = round(row.nsr*row.jml_luas)
+            row.tarif          = JenisReklame.get_by_id(row.jenis_reklame_id).tarif
             row.pokok          = round(row.dasar*row.tarif/100)
             row.denda          = 0
             row.bunga          = 0
@@ -69,8 +79,8 @@ def set_izin(request, data):
                                  id_permohonan=row.id_permohonan,
                                  jml_terhutang=round(row.jml_terhutang)))
             
-    except:
-        return dict(code=CODE_DATA_INVALID, message='Data Invalid')
+    #except:
+    #    return dict(code=CODE_DATA_INVALID, message='Data Invalid')
     
     params=dict(data=ret_data)
     return dict(code=CODE_OK, message='Data Submitted',params=params)

@@ -68,9 +68,12 @@ def jenis_act(request):
                                MasaPajak.nama.label('masa_pajak_nm'),
                                MasaPajak.pembagi,
                                MasaPajak.accres,
+                               JenisReklame.rekening_id,
+                               Rekening.nama,
                                
                        ).filter(JenisReklame.nama.ilike('%%%s%%' % term) ,
-                          JenisReklame.masa_pajak_id==MasaPajak.id
+                          JenisReklame.masa_pajak_id==MasaPajak.id,
+                          JenisReklame.rekening_id==Rekening.id
                        ).all()
         r = []
         for k in rows:
@@ -84,6 +87,8 @@ def jenis_act(request):
             d['masa_pajak_nm'] = k[5]
             d['pembagi']       = k[6]
             d['accres']        = k[7]
+            d['rekening_id']        = k[8]
+            d['rekening_nm']        = k[9]
             r.append(d)
         return r   
            

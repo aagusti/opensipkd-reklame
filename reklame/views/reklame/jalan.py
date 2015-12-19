@@ -61,8 +61,12 @@ def jalan_act(request):
         term = 'term' in params and params['term'] or '' 
         rows = DBSession.query(Jalan.id, 
                                Jalan.kode, 
-                               Jalan.nama
-                       ).filter(Jalan.nama.ilike('%%%s%%' % term) 
+                               Jalan.nama,
+                               KelasJalan.id,
+                               KelasJalan.kode,
+                               KelasJalan.nama,
+                       ).filter(Jalan.kelas_jalan_id == KelasJalan.id,
+                                Jalan.nama.ilike('%%%s%%' % term) 
                        ).all()
         r = []
         for k in rows:
@@ -71,6 +75,9 @@ def jalan_act(request):
             d['value']   = k[2]
             d['kode']    = k[1]
             d['nama']    = k[2]
+            d['kelas_jalan_id']    = k[3]
+            d['kelas_jalan_kd']    = k[4]
+            d['kelas_jalan_nm']    = k[5]
             r.append(d)
         return r   
            

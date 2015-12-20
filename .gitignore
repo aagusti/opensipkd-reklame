@@ -56,3 +56,5 @@ docs/_build/
 # PyBuilder
 target/
 test.ini
+live.ini
+logo.png

@@ -51,3 +51,4 @@ id,kode,path,nama,status
 50,"rekening-add","/rekening/add","Tambah Rekening",1
 51,"rekening-edit","/rekening/{id}/edit","Edit Rekening",1
 52,"rekening-delete","/rekening/{id}/delete","Hapus Rekening",1
+53,"upload-logo","/upload/logo","Unggah Logo",1

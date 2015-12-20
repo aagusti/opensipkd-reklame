@@ -7,91 +7,120 @@ from ...models.reklame import (Transaksi, Njop, JenisNssr, Nssr, Ketinggian, Sud
 from ...models.reklame import (Kecamatan, Kelurahan)
 from datetime import datetime
 
+def hitung_pajak(row):
+    row.luas = row.panjang * row.lebar
+    row.jml_luas         = row.luas*row.muka*row.jumlah_titik
+    
+    tmp_row           = JenisReklame.get_by_id(row.jenis_reklame_id)
+    row.masa_pajak_id = tmp_row.masa_pajaks.id
+    row.pembagi       = tmp_row.masa_pajaks.pembagi
+    row.accres        = tmp_row.masa_pajaks.accres
+    
+    row.jenis_reklame_ni = Njop.search_by_luas(
+                            row.jenis_reklame_id, row.luas).nilai
+    
+    row.jenis_reklame_ni = Njop.search_by_luas(
+                            row.jenis_reklame_id, row.luas).nilai
+    row.ketinggian_ni    = Ketinggian.get_by_id(row.ketinggian_id).nilai
+    row.jml_ketinggian   = round(row.tinggi*row.ketinggian_ni)
+    row.nssr_ni          = Nssr.search_by_luas(row.jenis_nssr_id,row.luas).nilai
+    row.kelas_jalan_ni   = KelasJalan.get_by_id(row.kelas_jalan_id).nilai
+    row.sudut_pandang_ni = Sudut.get_by_id(row.sudut_pandang_id).nilai
+    row.lokasi_pasang_ni = Lokasi.get_by_id(row.lokasi_pasang_id).nilai
+    row.nssr             = (row.kelas_jalan_ni+row.sudut_pandang_ni
+                           +row.lokasi_pasang_ni)*row.nssr_ni
+                                    
+    row.faktor_lain_ni   = FaktorLain.get_by_id(row.faktor_lain_id).tarif
+                                    
+    row.nsr            = row.jenis_reklame_ni+row.nssr+row.jml_ketinggian
+    if row.pembagi>1:
+        row.nsr = round(row.nsr/row.pembagi)
+    if row.accres>0:
+        row.nsr = round(row.nsr + row.accres*row.nsr/100)
+        
+    row.dasar          = round(row.nsr*row.jml_luas)
+    row.tarif          = JenisReklame.get_by_id(row.jenis_reklame_id).tarif
+    row.pokok          = round(row.dasar*row.tarif/100)
+    row.denda          = 0
+    row.bunga          = 0
+    row.kompensasi     = row.faktor_lain_ni<0 and row.faktor_lain_ni/100*row.pokok or 0
+    row.kenaikan       = row.faktor_lain_ni>0 and row.faktor_lain_ni/100*row.pokok or 0
+    row.lain           = 0
+    row.jml_terhutang  = row.pokok+row.denda+row.bunga+row.kenaikan+row.lain-row.kompensasi
+    row.status         = 1
+    row.kode = "{no}-{id}".format(
+                  no = row.no_permohonan,
+                  id = str(row.id_permohonan).rjust(3,'0')
+                  )
+    row.nama_wp = row.nama_pemohon
+    return row
+            
 @jsonrpc_method(method='set_izin', endpoint='ws_reklame')
 def set_izin(request, data):
     resp,user = auth_from_rpc(request)
     if resp['code'] != 0:
         return resp
-    #try:
-    if 1==1:
+    try:
+    #if 1==1:
         ret_data =[]
         for r in data:
-            if int(r['command'])==1:
-                  row = Transaksi()
-                  row.create_uid = user.id
-                  row.created    = datetime.now()
+            query = DBSession.query(Transaksi).\
+                       filter_by(no_permohonan=r['no_permohonan'],
+                                 id_permohonan=str(r['id_permohonan']))
+            row = query.first()
+            if row:
+                if row.no_skpd: #Jika sudah ditetapkan di skip
+                    ret_data.append(dict(no_permohonan = row.no_permohonan,
+                                     id_permohonan = row.id_permohonan,
+                                     command       = r['command'],
+                                     status        = -1,
+                                     message       = 'Data Sudah Ditetapkan'))
+                    continue 
+                elif int(r['command'])==1:
+                    ret_data.append(dict(no_permohonan = row.no_permohonan,
+                                     id_permohonan = row.id_permohonan,
+                                     command       = r['command'],
+                                     status        = -1,
+                                     message       = 'Data Sudah Ada'))
+                    continue                  
+                elif int(r['command'])==2:
+                    row.update_uid = user.id
+                    row.updated    = datetime.now()
+                    
+                elif int(r['command'])==3:
+                    query.delete()
+                    ret_data.append(dict(no_permohonan = row.no_permohonan,
+                                         id_permohonan = row.id_permohonan,
+                                         command       = r['command'],
+                                         status        = 0))
+                    continue 
+                    
             else:
-                  row = DBSession.query(Transaksi).\
-                             filter_by(no_permohonan=r['no_permohonan'],
-                                       id_permohonan=str(r['id_permohonan'])).first()
-                  
-                  if row.no_skpd and row.tgl_skpd:
-                      return dict(code=CODE_DATA_INVALID, message='Data Sudah Ditetapkan')
-                      
-                  elif int(r['command'])==3:
-                      row.delete()
-                      DBSession.add(row)
-                      DBSession.flush()
-                      return dict(code=CODE_DATA_INVALID, message='Data Sudah Dihapus')
-            if not row:
-                return dict(code=CODE_DATA_INVALID, message='Data Tidak Ada')
-                
+                if int(r['command'])==1:
+                    row = Transaksi()
+                    row.create_uid = user.id
+                    row.created    = datetime.now()
+                else:
+                    ret_data.append(dict(no_permohonan = r['no_permohonan'],
+                                     id_permohonan = r['id_permohonan'],
+                                     command       = r['command'],
+                                     status        = -2,
+                                     message       = "Data Tidak Ditemukan"))
+                    continue 
             row.from_dict(r)
-            row.luas = row.panjang * row.lebar
-            row.jml_luas         = row.luas*row.muka*row.jumlah_titik
-            
-            tmp_row           = JenisReklame.get_by_id(row.jenis_reklame_id)
-            row.masa_pajak_id = tmp_row.masa_pajaks.id
-            row.pembagi       = tmp_row.masa_pajaks.pembagi
-            row.accres        = tmp_row.masa_pajaks.accres
-            
-            row.jenis_reklame_ni = Njop.search_by_luas(
-                                    row.jenis_reklame_id, row.luas).nilai
-            
-            row.jenis_reklame_ni = Njop.search_by_luas(
-                                    row.jenis_reklame_id, row.luas).nilai
-            row.ketinggian_ni    = Ketinggian.get_by_id(row.ketinggian_id).nilai
-            row.jml_ketinggian   = round(row.tinggi*row.ketinggian_ni)
-            row.nssr_ni          = Nssr.search_by_luas(row.jenis_nssr_id,row.luas).nilai
-            row.kelas_jalan_ni   = KelasJalan.get_by_id(row.kelas_jalan_id).nilai
-            row.sudut_pandang_ni = Sudut.get_by_id(row.sudut_pandang_id).nilai
-            row.lokasi_pasang_ni = Lokasi.get_by_id(row.lokasi_pasang_id).nilai
-            row.nssr             = (row.kelas_jalan_ni+row.sudut_pandang_ni
-                                   +row.lokasi_pasang_ni)*row.nssr_ni
-                                            
-            row.faktor_lain_ni   = FaktorLain.get_by_id(row.faktor_lain_id).tarif
-                                            
-            row.nsr            = row.jenis_reklame_ni+row.nssr+row.jml_ketinggian
-            if row.pembagi>1:
-                row.nsr = round(row.nsr/row.pembagi)
-            if row.accres>0:
-                row.nsr = round(row.nsr + row.accres*row.nsr/100)
-                
-            row.dasar          = round(row.nsr*row.jml_luas)
-            row.tarif          = JenisReklame.get_by_id(row.jenis_reklame_id).tarif
-            row.pokok          = round(row.dasar*row.tarif/100)
-            row.denda          = 0
-            row.bunga          = 0
-            row.kompensasi     = row.faktor_lain_ni<0 and row.faktor_lain_ni/100*row.pokok or 0
-            row.kenaikan       = row.faktor_lain_ni>0 and row.faktor_lain_ni/100*row.pokok or 0
-            row.lain           = 0
-            row.jml_terhutang  = row.pokok+row.denda+row.bunga+row.kenaikan+row.lain-row.kompensasi
-            row.status         = 1
-            row.kode = "{no}-{id}".format(
-                          no = row.no_permohonan,
-                          id = str(row.id_permohonan).rjust(3,'0')
-                          )
-                          
             row.nama = r['naskah']
-            row.nama_wp = row.nama_pemohon
+            row = hitung_pajak(row)
+            ret_data.append(dict(no_permohonan = row.no_permohonan,
+                             id_permohonan = row.id_permohonan,
+                             jml_terhutang = row.jml_terhutang,
+                             command       = r['command'],
+                             status        = 0,
+                             message       = "Sukses"))
             DBSession.add(row)
-            DBSession.flush()
-            ret_data.append(dict(no_permohonan=row.no_permohonan,
-                                 id_permohonan=row.id_permohonan,
-                                 jml_terhutang=round(row.jml_terhutang)))
-            
-    #except:
-    #    return dict(code=CODE_DATA_INVALID, message='Data Invalid')
+        DBSession.flush()
+
+    except:
+        return dict(code=CODE_DATA_INVALID, message='Data Invalid')
     
     params=dict(data=ret_data)
     return dict(code=CODE_OK, message='Data Submitted',params=params)
@@ -101,21 +130,29 @@ def get_izin(request, data):
     resp,user = auth_from_rpc(request)
     if resp['code'] != 0:
         return resp
-    #try:
-    if 1==1:
-        ret_data =[]
+    resp,user = auth_from_rpc(request)
+    if resp['code'] != 0:
+        return resp
+    try:
+        ret_data=[]
         for r in data:
-            row = DBSession.query(Transaksi).\
+            query = DBSession.query(Transaksi).\
                        filter_by(no_permohonan=r['no_permohonan'],
-                                 id_permohonan=str(r['id_permohonan'])).first()
+                                 id_permohonan=str(r['id_permohonan']))
+            row = query.first()
             if not row:
-                return dict(code=CODE_DATA_INVALID, message='Data Tidak Ada')
-                
-            ret_data.append(row.to_dict())
-            
-    #except:
-    #    return dict(code=CODE_DATA_INVALID, message='Data Invalid')
-    
+                ret_data.append(dict(no_permohonan = r['no_permohonan'],
+                                 id_permohonan = r['id_permohonan'],
+                                 command       = r['command'],
+                                 status        = -2,
+                                 message       = "Data Tidak Ditemukan"))
+            else:
+                dicted =dict( status        = 0,
+                             message       = "Success")
+                dicted.update(row.to_dict())
+                ret_data.append(dicted)
+    except:
+        return dict(code=CODE_DATA_INVALID, message='Data Invalid')
     params=dict(data=ret_data)
     return dict(code=CODE_OK, message='Data Submitted',params=params)
 
@@ -137,62 +174,52 @@ def set_skpd(request, data):
                 
             row.from_dict(r)
             DBSession.add(row)
-            DBSession.flush()
             ret_data.append(dict(no_permohonan=row.no_permohonan,
                                  id_permohonan=row.id_permohonan,
-                                 jml_terhutang=round(row.jml_terhutang)))
-            
+                                 #jml_terhutang=round(row.jml_terhutang),
+                                 status = CODE_OK,
+                                ))
+        DBSession.flush()
+
     #except:
     #    return dict(code=CODE_DATA_INVALID, message='Data Invalid')
     
     params=dict(data=ret_data)
     return dict(code=CODE_OK, message='Data Submitted',params=params)
-    
+
 @jsonrpc_method(method='get_skpd', endpoint='ws_reklame')
 def get_skpd(request, data):
     resp,user = auth_from_rpc(request)
     if resp['code'] != 0:
         return resp
-    #try:
-    if 1==1:
-        ret_data =[]
-        for r in data:
-            row = DBSession.query(Transaksi).\
-                       filter_by(no_permohonan=r['no_permohonan'],
-                                 id_permohonan=str(r['id_permohonan'])).first()
-            if not row:
-                return dict(code=CODE_DATA_INVALID, message='Data Tidak Ada')
-                
-            ret_data.append(row.to_dict(r))
-            
-    #except:
-    #    return dict(code=CODE_DATA_INVALID, message='Data Invalid')
+    return get_izin(request,data)
     
-    params=dict(data=ret_data)
-    return dict(code=CODE_OK, message='Data Submitted',params=params)
-
 @jsonrpc_method(method='get_tirek', endpoint='ws_reklame')
 def get_tirek(request, data):
     resp,user = auth_from_rpc(request)
     if resp['code'] != 0:
         return resp
-    #try:
-    if 1==1:
-        ret_data =[]
+    try:
+        ret_data=[]
         for r in data:
-            row = DBSession.query(Reklame).\
-                       filter_by(kode=r['kode']).first()
+            query = DBSession.query(Reklame).\
+                       filter_by(kode=r['kode'])
+            row = query.first()
             if not row:
-                return dict(code=CODE_DATA_INVALID, message='Data Tidak Ada')
-                
-            ret_data.append(row.to_dict(r))
-            
-    #except:
-    #    return dict(code=CODE_DATA_INVALID, message='Data Invalid')
-    
+                ret_data.append(dict(no_permohonan = r['no_permohonan'],
+                                 id_permohonan = r['id_permohonan'],
+                                 command       = r['command'],
+                                 status        = -2,
+                                 message       = "Data Tidak Ditemukan"))
+            else:
+                dicted =dict( status        = 0,
+                             message       = "Success")
+                dicted.update(row.to_dict())
+                ret_data.append(dicted)
+    except:
+        return dict(code=CODE_DATA_INVALID, message='Data Invalid')
     params=dict(data=ret_data)
     return dict(code=CODE_OK, message='Data Submitted',params=params)
-
     
 @jsonrpc_method(method='get_jenis_reklame', endpoint='ws_reklame')
 def get_jenis_reklame(request, data):

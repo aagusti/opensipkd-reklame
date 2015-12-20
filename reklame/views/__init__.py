@@ -65,7 +65,7 @@ def get_login_headers(request, user):
 @view_config(route_name='login', renderer='templates/login.pt')
 def view_login(request):
     if authenticated_userid(request):
-        return HTTPFound(location=request.route_url('home'))
+        return HTTPFound(location=request.route_url('reklame'))
     schema = Login(validator=login_validator)
     form = Form(schema, buttons=('login',))
     if 'login' in request.POST: 
@@ -79,7 +79,7 @@ def view_login(request):
             #request.session['login failed'] = e.render()
             return HTTPFound(location=request.route_url('login'))
         headers = get_login_headers(request, user)        
-        return HTTPFound(location=request.route_url('home'),
+        return HTTPFound(location=request.route_url('reklame'),
                           headers=headers)
     elif 'login failed' in request.session:
         r = dict(form=request.session['login failed'])

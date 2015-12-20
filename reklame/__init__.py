@@ -20,6 +20,8 @@ from pyramid.httpexceptions import (
     default_exceptionresponse_view,
     HTTPFound,
     )
+from pyramid.renderers import JSON    
+import datetime
 from sqlalchemy import engine_from_config
 from security import (
     group_finder,
@@ -109,10 +111,6 @@ def main(global_config, **settings):
                           session_factory=session_factory)
     config.include('pyramid_beaker')                          
     config.include('pyramid_chameleon')
-    ############################################################################
-    config.include('pyramid_rpc.jsonrpc') # JSON RPC
-    #config.add_renderer('json', json_renderer)
-    ############################################################################
 
     authn_policy = AuthTktAuthenticationPolicy('sosecret',
                     callback=group_finder, hashalg='sha512')
@@ -126,14 +124,21 @@ def main(global_config, **settings):
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view('deform_static', 'deform:static')
     config.add_static_view('files', settings['static_files'])    
-
+    ############################################################################
+    config.include('pyramid_rpc.jsonrpc') # JSON RPC
+    json_renderer = JSON()
+    json_renderer.add_adapter(datetime.datetime, lambda v, request: v.isoformat())
+    json_renderer.add_adapter(datetime.date, lambda v, request: v.isoformat())
+    config.add_renderer('myjson', json_renderer)
+    config.add_jsonrpc_endpoint('ws_reklame', '/ws/reklame', default_renderer="myjson")       
+    ############################################################################
+ 
     routes = DBSession.query(Route.kode, Route.path, Route.nama).all()
     for route in routes:
         config.add_route(route.kode, route.path)
         if route.nama:
             titles[route.kode] = ' - '.join([main_title, route.nama])     
             
-    config.add_jsonrpc_endpoint('ws_reklame', '/ws/reklame') #, default_renderer="json")       
     
     config.scan()
     

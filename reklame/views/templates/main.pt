@@ -1,0 +1,55 @@
+<html metal:use-macro="load: base.pt">
+<div metal:fill-slot="navs">
+
+<div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Administrator</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li tal:attributes="class request.path == '/' and 'active'"><a href="/">Beranda</a></li>
+            <li tal:attributes="class request.path == '/reklame' and 'active'"><a href="/reklame">Reklame</a></li>
+          
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Umum <b class="caret"></b></a>
+              <ul class="dropdown-menu">    
+                <li><a href="/urusan">Urusan</a></li>             
+                <li><a href="/unit">Unit Kerja</a></li>            
+                <li><a href="/user/unit">User Unit</a></li>               
+                <li><a href="/rekening">Rekening</a></li>   
+                <li><a href="/reklame/kecamatan">Kecamatan</a></li>
+                <li><a href="/reklame/kelurahan">Kelurahan</a></li>  
+              </ul>
+            </li>
+            
+            <li class="dropdown" tal:attributes="class request.matched_route.name in ['user', 'user-add', 'user-edit', 'user-delete', 'group', 'group-add', 'group-edit', 'group-delete'] and 'active'">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/user">User</a></li>                
+                <li><a href="/group">Group</a></li>                
+                <li><a href="/routes">Route</a></li>           
+                <li><a href="/user/group">User Groups</a></li>                
+                <li><a href="/group/routes">Group Permission</a></li>   
+                <li><a href="/upload/logo">Upload Logo</a></li>   
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav pull-right">  
+            <li class="dropdown" tal:attributes="class request.path in ['/password'] and 'active'">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Akun<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/logout">${request.user.nice_username()} Keluar</a></li>
+                <li><a href="/password">Ubah Kata Sandi</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      
+</div>
+</html>
+        

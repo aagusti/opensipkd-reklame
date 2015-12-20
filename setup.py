@@ -63,6 +63,6 @@ setup(name='opensipkd-reklame',
       [paste.app_factory]
       main = reklame:main
       [console_scripts]
-      initialize_reklame_db = reklame.scripts.initializedb:main      
+      initialize_opensipkd_reklame_db = reklame.scripts.initializedb:main      
       """,
       )

@@ -53,6 +53,10 @@
     <script type="text/javascript" src="/deform_static/scripts/modernizr.custom.input-types-and-atts.js"></script>
     <script type="text/javascript" src="/static/js/pickadate/picker.js"></script>
     <script type="text/javascript" src="/static/js/pickadate/picker.date.js"></script>
+    <script type="text/javascript" src="/static/js/hashtable/hashtable.js"></script>
+    <script type="text/javascript" src="/static/js/hashtable/hashset.js"></script>
+    <script type="text/javascript" src="/static/js/jquery/jquery.numberformatter.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery/jquery.maskMoney.min.js"></script>
     <script type="text/javascript" src="/static/datatables/media/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="/static/datatables/media/js/dataTables.bootstrap.js"></script>
     <script type="text/javascript" src="/static/datatables/media/js/jquery.dataTables.ext.js"></script>
